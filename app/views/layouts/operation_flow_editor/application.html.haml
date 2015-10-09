@@ -9,5 +9,15 @@
     = stylesheet_link_tag 'operation_flow_editor/application', :media => 'screen'
     = javascript_include_tag 'operation_flow_editor/application'
 
-  %body
-    = yield
+  %body.operation-flow-editor
+    .sidebar
+      :ruby
+        @sidebar_item ||= :actions
+        actions_klass = @sidebar_item == :actions ? 'active' : ''
+        roles_klass = @sidebar_item == :roles ? 'active' : ''
+
+      %a.item.actions{href: actions_path, class: actions_klass} 动作编辑
+      %a.item.roles{href: roles_path, class: roles_klass} 角色
+
+    .main-panel
+      = yield

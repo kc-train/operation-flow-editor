@@ -42,3 +42,5 @@ gem 'play_auth', :github => 'mindpin/play_auth',
                  :tag => :latest
 
 gem 'operation-flow-editor', path: '../'
+
+gem 'bootstrap-sass', '~> 3.3.5'
