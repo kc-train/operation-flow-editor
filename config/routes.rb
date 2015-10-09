@@ -3,4 +3,5 @@ OperationFlowEditor::Engine.routes.draw do
 
   get '/roles', to: 'home#roles'
   get '/actions', to: 'home#actions'
+  get '/yaml_sample', to: 'home#yaml_sample'
 end
