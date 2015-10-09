@@ -1,0 +1,12 @@
+development:
+  sessions:
+    default:
+      database: operation-flow-editor_dev
+      hosts:
+        - localhost:27017
+test:
+  sessions:
+    default:
+      database: operation-flow-editor_test
+      hosts:
+        - localhost:27017
