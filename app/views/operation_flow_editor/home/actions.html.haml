@@ -1,14 +1,3 @@
 .page-actions
-  .toolbar
-    %a.add-action{href: 'javascript:;'}
-      %i.fa.fa-plus
-  .actions-list
-    .action
-      .name 填写递交并审核开户申请
-    .action
-      .name 输入开户信息
-    .action
-      .name 递交现金
-    .action
-      .name 清点现金，核对金额
+  = react_component 'OEActionList'
   .yaml-sample{data: {url: "/yaml_sample.json?ywid=172001"}}

@@ -1,9 +1,5 @@
 module OperationFlowEditor
-  class HomeController < OperationFlowEditor::ApplicationController
-    def index
-      @flows = OperationFlowEditor::Flow.all
-    end
-
+  class EditorController < OperationFlowEditor::ApplicationController
     def actions
     end
 

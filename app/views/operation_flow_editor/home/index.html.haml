@@ -1,0 +1,4 @@
+.page-index
+  :ruby
+    flows = OperationFlowEditor::Flow.all.map(&:simple_json)
+  = react_component 'OEFlowList', {flows: flows}
