@@ -42,7 +42,7 @@ RoleLane = React.createClass
       height: height
 
 
-FrontEndCourseWare = React.createClass
+@OEPreviewer = React.createClass
   render: ->
     @dp = new DataParser @props.data
     @roles = @dp.get_roles()

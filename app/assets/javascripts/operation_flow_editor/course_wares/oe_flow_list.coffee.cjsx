@@ -55,7 +55,7 @@
                       <i className='fa fa-pencil'></i>
                       <span>修改</span>
                     </BSButton>
-                    <BSButton bssize='xs'>
+                    <BSButton bssize='xs' href="./editor/#{flow.id}/actions">
                       <i className='fa fa-pencil'></i>
                       <span>设计</span>
                     </BSButton>
@@ -111,20 +111,3 @@
         $tr.fadeOut =>
           @setState
             flows: @state.flows.filter (x)-> x.id != id
-
-
-
-@OEActionList = React.createClass
-  render: ->
-    <div className='OEActionList'>
-      <div className='toolbar'>
-        <a className='add-action' href='javascript:;'>
-          <i className='fa fa-plus'></i>
-        </a>
-      </div>
-      <div className='actions-list'>
-        <div className='action'>
-          <div className='name'>填写递交并审核开户申请</div>
-        </div>
-      </div>
-    </div>

@@ -154,7 +154,7 @@ body.operation-flow-editor {
       }
     }
 
-    .yaml-sample {
+    .preview {
       position: absolute;
       top:0;right:0;bottom:0;
       left:250px;
@@ -165,10 +165,11 @@ body.operation-flow-editor {
 .page-index {
   .OEFlowList {
     .toolbar {
-      padding: 15px 15px;
+      padding: 15px 0;
       border-bottom: solid 1px #ddd;
     }
     .flows {
+      margin-bottom: 15px;
       .flow {
         padding: 0 15px;
         height: 40px;line-height: 40px;

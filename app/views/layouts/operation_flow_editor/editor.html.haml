@@ -16,8 +16,8 @@
         actions_klass = @sidebar_item == :actions ? 'active' : ''
         roles_klass = @sidebar_item == :roles ? 'active' : ''
 
-      %a.item.actions{href: actions_path, class: actions_klass} 动作编辑
-      %a.item.roles{href: roles_path, class: roles_klass} 角色
+      %a.item.actions{href: 'javascript:;', class: actions_klass} 动作编辑
+      %a.item.roles{href: 'javascript:;', class: roles_klass} 角色
 
     .main-panel
       = yield
