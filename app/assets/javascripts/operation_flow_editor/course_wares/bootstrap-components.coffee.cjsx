@@ -14,11 +14,11 @@
 
 @BSModal = React.createClass
   getDefaultProps: ->
-    bsstyle: 'sm'
+    bs_size: 'sm'
 
   render: ->
     <div className='modal fade' ref='modal'>
-      <div className="modal-dialog modal-#{@props.bsstyle}">
+      <div className="modal-dialog modal-#{@props.bs_size}">
         <div className='modal-content'>
           {@props.children}
         </div>

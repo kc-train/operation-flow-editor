@@ -14,6 +14,7 @@ ActionNode = React.createClass
       <div className='name'>{@props.action.name()}</div>
     </div>
 
+
 RoleLane = React.createClass
   render: ->
     <div className='role-lane' data-role={@props.role}>
@@ -79,7 +80,7 @@ class DataParser
 
   tidy_data: ->
     @roles = {}
-    @actions = for _action in @data['操作步骤']
+    @actions = for _action in @data.actions || []
       action = new Action _action
       role = action.role()
       @roles[role] ||= []
@@ -91,7 +92,8 @@ class DataParser
     for role, actions of @roles
       @deeps[role] = {}
 
-    @_r1_deep @start_action(), 0
+    if @start_action()?
+      @_r1_deep @start_action(), 0
 
   _r1_deep: (action, deep)->
     deep_role = @deeps[action.role()]
@@ -117,8 +119,8 @@ class DataParser
     action.posx = deep_role[action.deep].length - 1
     action.posy = action.deep
 
-    action.children = for name in action.children_names()
-      child = (@actions.filter (x)-> x.name_eq name)[0]
+    action.children = for id in action.children_ids()
+      child = (@actions.filter (x)-> x.id_eq id)[0]
       @_r1_deep child, action.deep + 1
       child
 
@@ -159,9 +161,7 @@ class DataParser
       x0 += action_offset.left
       x1 += child_offset.left
 
-      # if action.name_eq '柜员请求客户输入预留密码'
       @curve_arrow.draw x0, y0, x1, y1, '#999999', @arrow_offset
-
       @_r2 child, role_pos
 
   get_actions: ->
@@ -171,28 +171,23 @@ class DataParser
     @roles
 
   start_action: ->
-    (@actions.filter (x)-> x.is_start())[0]
-
+    @actions[0]
 
 
 class Action
   constructor: (@data)->
 
-  is_start: ->
-    @data['是否起始步骤'] is '是'
+  children_ids: ->
+    @data.post_actions || []
 
-  children_names: ->
-    (@data['后续操作步骤']||[]).map (x)->
-      x['后续步骤名称']
-
-  name_eq: (name)->
-    @name() is name
+  id_eq: (id)->
+    @data.id is id
 
   name: ->
-    @data['步骤名称']
+    @data.name
 
   role: ->
-    @data['操作者']
+    @data.role
 
   pos: ->
     @offx = 30

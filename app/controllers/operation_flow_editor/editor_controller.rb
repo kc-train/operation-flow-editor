@@ -4,27 +4,36 @@ module OperationFlowEditor
 
     def actions
       @flow = OperationFlowEditor::Flow.find(params[:flow_id])
+      @actions = @flow.actions || []
 
-      path = File.join __dir__, '../../..', "data-templates/sample/#{122100}.yaml"
-      str = File.read path
-      @data = YAML.load str
+      # @actions = [
+      #   {
+      #     id: 0,
+      #     name: 'hahaha',
+      #     role: '柜员',
+      #     post_actions: [1]
+      #   },
+      #   {
+      #     id: 1,
+      #     name: 'hehehe',
+      #     role: '柜员',
+      #     post_actions: [2]
+      #   },
+      #   {
+      #     id: 2,
+      #     role: '客户',
+      #     name: 'xixixi'
+      #   }      
+      # ]
 
-      @actions = [
-        {
-          id: 0,
-          name: 'hahaha',
-          post_actions: [1]
-        },
-        {
-          id: 1,
-          name: 'hehehe',
-          post_actions: [2]
-        },
-        {
-          id: 2,
-          name: 'xixixi'
-        }      
-      ]
+      # @data = { actions: @actions }
+    end
+
+    def update_actions
+      @flow = OperationFlowEditor::Flow.find(params[:flow_id])
+      @flow.actions = params[:actions].values
+      @flow.save
+      render text: 'ok'
     end
 
     def roles

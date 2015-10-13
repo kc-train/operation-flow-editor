@@ -1,4 +1,8 @@
 @OEFlowList = React.createClass
+  # props
+  #   show
+  #   close
+
   getInitialState: ->
     show_modal: false
     flows: @props.flows || []
