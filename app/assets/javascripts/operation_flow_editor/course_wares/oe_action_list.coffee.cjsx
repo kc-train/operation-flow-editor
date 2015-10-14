@@ -1,6 +1,9 @@
 @OEActionModal = React.createClass
+  getInitialState: ->
+    show: false
+
   render: ->
-    <BSModal show={@props.show} bs_size='default'>
+    <BSModal show={@state.show} bs_size='default'>
       <BSModal.Header>
         <BSModal.Title>增加操作节点</BSModal.Title>
       </BSModal.Header>
@@ -14,15 +17,36 @@
           <i className='fa fa-ok'></i>
           <span>确定保存</span>
         </BSButton>
-        <BSButton onClick={@props.close}>
+        <BSButton onClick={@hide}>
           <span>关闭</span>
         </BSButton>
       </BSModal.Footer>
     </BSModal>
 
+  show: ->
+    @setState show: true
+
+  hide: ->
+    @setState show: false
+
+  get_name: ->
+    $name_inputer = jQuery React.findDOMNode @refs.name_inputer
+    name = $name_inputer.val()
+    name = '未命名' if jQuery.trim(name).length is 0
+    name
+
+  get_action_data: ->
+    id: "id" + new Date().getTime()
+    name: @get_name()
+
+  clear_name: ->
+    $name_inputer = jQuery React.findDOMNode @refs.name_inputer
+    $name_inputer.val('')
+
+
+
 @OEActionList = React.createClass
   getInitialState: ->
-    show_action_modal: false
     actions: @props.actions || []
 
   render: ->
@@ -46,44 +70,21 @@
             </div>
         }
       </div>
-      <OEActionModal ref='action_modal' show={@state.show_action_modal} close={@close_action_modal} save={@create_action} />
+      <OEActionModal ref='action_modal' save={@create_action} />
     </div>
 
   show_action_modal: ->
-    @setState
-      show_action_modal: true
+    @refs.action_modal.show()
 
-  close_action_modal: ->
-    @setState
-      show_action_modal: false
+  hide_action_modal: ->
+    @refs.action_modal.hide()
 
   create_action: ->
-    $name_inputer = jQuery React.findDOMNode @refs.action_modal.refs.name_inputer
-    console.log $name_inputer
+    action = @refs.action_modal.get_action_data()
 
-    name = $name_inputer.val()
-    if jQuery.trim(name).length is 0
-      name = '未命名'
-
-    action = {
-      id: "id" + new Date().getTime()
-      name: name
-    }
     actions = @state.actions
     actions.push action
-    @setState
-      actions: actions
-
-    jQuery.ajax
-      url: @props.update_url
-      type: 'PUT'
-      data:
-        actions: actions
-    .done (res)=>
-      $name_inputer.val('')
-      @close_action_modal()
-    .fail ->
-      console.log 2
+    @save_actions actions
 
   remove_action: (evt, react_id)->
     $btn = jQuery("[data-reactid='#{react_id}']")
@@ -96,15 +97,16 @@
         "#{x.id}" != "#{id}"
 
       $action.fadeOut =>
-        @setState
-          actions: actions
+        @save_actions actions
 
+  save_actions: (actions)->
     jQuery.ajax
       url: @props.update_url
       type: 'PUT'
       data:
         actions: actions
     .done (res)=>
-      console.log 1
+      @hide_action_modal()
+      @setState actions: actions
     .fail ->
       console.log 2

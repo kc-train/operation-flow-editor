@@ -32,6 +32,11 @@
     else
       jQuery(dom).modal('hide')
 
+  show: ->
+    @setState show: true
+
+  hide: ->
+    @setState show: false
 
   statics: 
     Header: React.createClass
