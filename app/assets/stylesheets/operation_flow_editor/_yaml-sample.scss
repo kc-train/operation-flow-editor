@@ -2,6 +2,7 @@
   @include clearfix;
   background-color: #FFF;
   position: relative;
+  border-left: solid 1px #ddd;
 
   .role-lane {
     min-width: 180px;
@@ -9,6 +10,8 @@
     float: left;
     // box-shadow: 1px 1px 3px rgba(black, 0.3);
     border-right: solid 1px #ddd;
+    // border-bottom: solid 1px #ddd;
+
     .lane-header {
       text-align: center;
       height:60px;
@@ -18,7 +21,7 @@
       border-bottom: dashed 1px #ccc;
       position: relative;
       padding-left: 30px;
-      background-color: #FFFFDA;
+      background-color: #F6F6F6;
     }
 
     .lane-nodes {
@@ -54,7 +57,7 @@
           width:30px;height:30px;
           background: url(http://i.teamkn.com/i/DtEA0wEP.png);
           position: absolute;
-          top:10px;left:10px;
+          top:15px;left:15px;
           background-size: cover;
           border-radius: 100px;
           // border: solid 2px rgba(black, 0.3);
@@ -74,7 +77,7 @@
           width:30px;height:30px;
           background: url(http://i.teamkn.com/i/UuDexXFr.png);
           position: absolute;
-          top:10px;left:10px;
+          top:15px;left:15px;
           background-size: cover;
           border-radius: 100px;
           // border: solid 2px rgba(black, 0.3);

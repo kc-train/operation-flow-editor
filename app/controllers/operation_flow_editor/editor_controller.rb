@@ -4,34 +4,54 @@ module OperationFlowEditor
 
     def actions
       @flow = OperationFlowEditor::Flow.find(params[:flow_id])
-      @actions = @flow.actions || []
+      @actions = @flow.actions
 
-      # @actions = [
-      #   {
-      #     id: 0,
+      # @actions = {
+      #   'id0' => {
+      #     id: 'id0',
       #     name: 'hahaha',
       #     role: '柜员',
-      #     post_actions: [1]
+      #     post_action_ids: ['id1']
       #   },
-      #   {
-      #     id: 1,
+      #   'id1' => {
+      #     id: 'id1',
       #     name: 'hehehe',
       #     role: '柜员',
-      #     post_actions: [2]
+      #     post_action_ids: ['id2']
       #   },
-      #   {
-      #     id: 2,
+      #   'id2' => {
+      #     id: 'id2',
       #     role: '客户',
-      #     name: 'xixixi'
-      #   }      
-      # ]
-
-      # @data = { actions: @actions }
+      #     name: 'xixixi',
+      #     post_action_ids: ['id3', 'id4']
+      #   },
+      #   'id3' => {
+      #     id: 'id3',
+      #     role: '柜员',
+      #     name: 'ooo'
+      #   },
+      #   'id4' => {
+      #     id: 'id4',
+      #     role: '客户',
+      #     name: 'kkk',
+      #     post_action_ids: ['id5', 'id6']
+      #   },
+      #   'id5' => {
+      #     id: 'id5',
+      #     role: '客户',
+      #     name: 'www'
+      #   },
+      #   'id6' => {
+      #     id: 'id6',
+      #     role: '柜员',
+      #     name: 'rrr'
+      #   }          
+      # }
     end
 
     def update_actions
       @flow = OperationFlowEditor::Flow.find(params[:flow_id])
-      @flow.actions = params[:actions].values
+      @flow.actions = params[:actions]
       @flow.save
       render text: 'ok'
     end
