@@ -7,6 +7,7 @@
 ###
 
 ActionNode = React.createClass
+  displayName: 'ActionNode'
   render: ->
     pos = @props.action.css_pos()
 
@@ -16,6 +17,7 @@ ActionNode = React.createClass
 
 
 RoleLane = React.createClass
+  displayName: 'RoleLane'
   render: ->
     <div className='role-lane' data-role={@props.role}>
       <div className='lane-header'>角色：{@props.role}</div>
@@ -44,6 +46,7 @@ RoleLane = React.createClass
 
 
 @OEPreviewer = React.createClass
+  displayName: 'OEPreviewer'
   render: ->
     @dp = new OEDataParser @props.data
 
