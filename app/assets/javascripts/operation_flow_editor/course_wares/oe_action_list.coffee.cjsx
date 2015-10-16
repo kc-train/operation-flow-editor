@@ -125,6 +125,7 @@ OEActionModal = React.createClass
     @setState role: evt.target.value
 
 @OEActionList = React.createClass
+  displayName: 'OEActionList'
   getInitialState: ->
     actions: @props.actions || {}
 

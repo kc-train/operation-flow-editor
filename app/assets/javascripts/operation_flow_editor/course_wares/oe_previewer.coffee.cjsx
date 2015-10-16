@@ -9,9 +9,13 @@
 ActionNode = React.createClass
   displayName: 'ActionNode'
   render: ->
-    pos = @props.action.css_pos()
+    action = @props.action
+    pos = action.css_pos()
+    klass = ['action-node']
+    klass.push ['start'] if action.is_start()
+    klass.push ['end'] if action.is_end()
 
-    <div className='action-node' style={{left: "#{pos.left}px", top: "#{pos.top}px"}}>
+    <div className={klass.join(' ')} style={{left: "#{pos.left}px", top: "#{pos.top}px"}}>
       <div className='name'>{@props.action.name}</div>
     </div>
 
@@ -23,7 +27,7 @@ RoleLane = React.createClass
       <div className='lane-header'>角色：{@props.role}</div>
       <div className='lane-nodes' ref='nodes_panel'>
         {
-          for action in @props.actions
+          for id, action of @props.actions
             @bottom ||= 0
             @right ||= 0
             css_pos = action.css_pos()
@@ -47,88 +51,74 @@ RoleLane = React.createClass
 
 @OEPreviewer = React.createClass
   displayName: 'OEPreviewer'
-  render: ->
-    @dp = new OEDataParser @props.data
+  getInitialState: ->
+    graph: new OEActionsGraph @props.data
 
+  render: ->
     <div className='front-end-course-ware'>
+      <canvas></canvas>
       {
-        for role, actions of @dp.roles
+        for role, actions of @state.graph.roles
           <RoleLane role={role} actions={actions} key={role} />
       }
     </div>
 
-  getInitialState: ->
-    roles: []
-    actions: []
-
   componentDidMount: ->
     # 画动态箭头
     role_pos = {}
-    for role, actions of @dp.roles
+    for role, actions of @state.graph.roles
       $lane = jQuery(".role-lane[data-role=#{role}] .lane-nodes")
       role_pos[role] = $lane.position()
 
-    @dp.draw_animate_arrow(role_pos)
+    @state.graph.draw_animate_arrow(role_pos)
 
 
-class OEDataParser
-  constructor: (@data)->
+
+class OEActionsGraph
+  constructor: (raw_data)->
     @roles = {}
     @actions = {}
 
-    # 第一次遍历，提取角色
-    for id, _action of @data.actions
+    # 第一次遍历，实例化 action 对象
+    # 分角色提取 action 集合
+    for id, _action of raw_data.actions
       action = new OEAction _action
       role = action.role
-      @roles[role] ||= []
-      @roles[role].push action
+      @roles[role] ||= {}
+      @roles[role][action.id] = action
       @actions[id] = action
 
-    # 第二次遍历，提取前置后续操作
+    # 第二次遍历，给每个 action 对象的前置后续操作赋值
     for id, action of @actions
       for post_action_id in action.post_action_ids
         post_action = @actions[post_action_id]
         action.post_actions[post_action.id] = post_action
-        post_action.pre_actions[id] = action
+        post_action.pre_actions[action.id] = action
 
-    # 第三次遍历，提取起始节点
-    @starts = {}
+    # 第三次遍历，划分子连通图
+    @sub_graphs = []
     for id, action of @actions
-      if Object.keys(action.pre_actions).length is 0
-        @starts[id] = action
+      sub_graph = new OEActionsSubGraph
+      @_r_sub_graph action, sub_graph
+      @sub_graphs.push sub_graph if not sub_graph.is_empty()
 
-    # 第四次遍历，计算深度，计算侧偏移
-    @deeps = {}
-    for role, actions of @roles
-      @deeps[role] = {}
-    for id, action of @starts
-      @_r_deep action, 0
+    # 分别遍历各个子图
+    # 计算各个节点深度值 (deep)
+    # 和偏移值 (offset)
+    offset_deep = 0
+    for sub_graph in @sub_graphs
+      sub_graph.offset_deep = offset_deep
+      sub_graph.compute()
+      offset_deep = sub_graph.max_deep + 1
 
-    console.log @actions
-    console.log @deeps
-
-  _r_deep: (action, deep)->
-    deep_role = @deeps[action.role]
-    deep_role[deep] ||= {}
-
-    # 当前 action 并未设置 deep
-    # 直接设置 deep
-    if not action.deep?
-      deep_role[deep][action.id] = action
-      action.deep = deep
-
-    # 当前 action 已经设置 deep
-    # 并且当前 deep < action.deep
-    # 从 deep_role 中移除，再根据当前 deep 设置
-    else if deep < action.deep
-      delete deep_role[action.deep][action.id]
-      deep_role[deep][action.id] = action
-      action.deep = deep
-
-    action.posx = Object.keys(deep_role[action.deep]).length - 1
-
+  _r_sub_graph: (action, sub_graph)->
+    return if action.sub_graph?
+    action.sub_graph = sub_graph
+    sub_graph.add(action)
+    for id, pre_action of action.pre_actions
+      @_r_sub_graph pre_action, action.sub_graph
     for id, post_action of action.post_actions
-      @_r_deep post_action, deep + 1
+      @_r_sub_graph post_action, action.sub_graph
 
   draw_animate_arrow: (role_pos)->
     @arrow_offset = 0 if not @arrow_offset?
@@ -143,18 +133,18 @@ class OEDataParser
     width = $cwel.width()
 
     if not @curve_arrow?
-      $canvas = jQuery('<canvas>')
+      $canvas = $cwel.find('canvas')
         .attr 'width', width
         .attr 'height', height
-        .prependTo $cwel
       @curve_arrow = new CurveArrow $canvas[0]
 
     @curve_arrow.clear()
 
-    for id, action of @starts
-      @_r2 action, role_pos
+    for id, action of @actions
+      if action.is_start()
+        @_r_arrow action, role_pos
 
-  _r2: (action, role_pos)->
+  _r_arrow: (action, role_pos)->
     # 画箭头
     for id, post_action of action.post_actions
       x0 = action.css_pos().left + 60
@@ -169,7 +159,52 @@ class OEDataParser
       x1 += post_action_offset.left
 
       @curve_arrow.draw x0, y0, x1, y1, '#999999', @arrow_offset
-      @_r2 post_action, role_pos
+      @_r_arrow post_action, role_pos
+
+
+
+class OEActionsSubGraph
+  constructor: ->
+    @actions = {}
+    @offset_deep = 0
+    @max_deep = 0
+
+  add: (action)->
+    @actions[action.id] = action
+
+  is_empty: ->
+    Object.keys(@actions).length is 0
+
+  compute: ->
+    @deeps = {}
+    for id, action of @actions
+      if action.is_start()
+        @_r action, 0
+
+    for role, role_deeps of @deeps
+      for deep, actions of role_deeps
+        idx = 0
+        for id, action of actions
+          action.offset = idx
+          idx += 1
+
+  _r: (action, deep)->
+    deep_role = @deeps[action.role] ||= {}
+
+    if not action.deep?
+      action.deep = deep
+      deep_role[deep] ||= {}
+      deep_role[deep][action.id] = action
+
+    if deep > action.deep
+      delete deep_role[action.deep][action.id]
+      action.deep = deep
+      deep_role[deep] ||= {}
+      deep_role[deep][action.id] = action
+
+    @max_deep = action.deep if action.deep > @max_deep
+    for id, post_action of action.post_actions
+      @_r post_action, deep + 1
 
 
 
@@ -183,12 +218,18 @@ class OEAction
     @pre_actions = {}
     
     @deep = null
-    @posx = 0
+    @offset = 0
+
+  is_start: ->
+    Object.keys(@pre_actions).length is 0
+
+  is_end: ->
+    Object.keys(@post_actions).length is 0
 
   css_pos: ->
-    top = 30 + @deep * (50 + 50)
+    top = 30 + (@deep + @sub_graph.offset_deep) * (50 + 30)
     bottom = top + 50
-    left = 30 + @posx * (120 + 30)
+    left = 30 + @offset * (120 + 30)
     right = left + 120
 
     top: top
