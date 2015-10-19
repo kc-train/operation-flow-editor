@@ -2,13 +2,14 @@
   getDefaultProps: ->
     bsstyle: 'default'
     href: 'javascript:;'
+    target: ''
 
   render: ->
     klass = ["btn", "btn-#{@props.bsstyle}"]
     if @props.bssize?
       klass.push "btn-#{@props.bssize}"
 
-    <a className={klass.join(' ')} href={@props.href} onClick={@props.onClick}>
+    <a className={klass.join(' ')} href={@props.href} target={@props.target} onClick={@props.onClick}>
       {@props.children}
     </a>
 

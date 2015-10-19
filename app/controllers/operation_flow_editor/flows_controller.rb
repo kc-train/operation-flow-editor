@@ -6,6 +6,15 @@ module OperationFlowEditor
       render :json => flow.simple_json
     end
 
+    def update
+      post_params = params.require(:flow).permit(:number, :name)
+      flow = OperationFlowEditor::Flow.find params[:id]
+      flow.number = params[:flow][:number]
+      flow.name = params[:flow][:name]
+      flow.save
+      render :json => flow.simple_json
+    end
+
     def index
       render :json => OperationFlowEditor::Flow.all.map(&:simple_json)
     end

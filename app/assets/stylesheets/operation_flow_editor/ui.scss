@@ -36,6 +36,7 @@ body.operation-flow-editor {
   $sidebar-width: 100px;
 
   .sidebar {
+    display: none;
     position: absolute;
     // top:10px + 15px;
     top: 10px;
@@ -72,7 +73,8 @@ body.operation-flow-editor {
 
   .main-panel {
     position: absolute;
-    left: $sidebar-width + 10px;
+    // left: $sidebar-width + 10px;
+    left: 10px;
     top:10px;right:10px;bottom:10px;
     background-color: #FFF;
     // border-radius: 5px;
@@ -119,7 +121,7 @@ body.operation-flow-editor {
     .toolbar {
       position: absolute;
       height:60px;
-      left:10px;top:0;width:240px;
+      left:0px;top:0;width:240px;
       background-color: #eee;
 
       a.add-action {
@@ -136,7 +138,7 @@ body.operation-flow-editor {
 
     .actions-list {
       position: absolute;
-      top:60px;left:10px;bottom:0;width:240px;
+      top:60px;left:0px;bottom:0;width:240px;
       // border-right:solid 1px #ddd;
       // border-left:solid 1px #ddd;
       padding:10px;
@@ -154,6 +156,9 @@ body.operation-flow-editor {
         border-left:solid 5px rgba(black, 0.1);
         color: rgba(black, 0.6);
         position: relative;
+
+        &[data-role='柜员'] {background-color: #d7f1fd;}
+        &[data-role='客户'] {background-color: #edfdb5;}
 
         a.link, a.remove {
           position: absolute;

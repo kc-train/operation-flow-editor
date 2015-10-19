@@ -149,7 +149,7 @@ OEActionModal = React.createClass
       <div className='actions-list'>
         {
           for id, action of @state.actions
-            <div data-id={action.id} key={action.id} className='action'>
+            <div data-role={action.role} data-id={action.id} key={action.id} className='action'>
               <div className='name'>{action.name}</div>
               <div className='role'>{action.role}</div>
               <a className='link' href='javascript:;' onClick={@show_update_action_modal}>
