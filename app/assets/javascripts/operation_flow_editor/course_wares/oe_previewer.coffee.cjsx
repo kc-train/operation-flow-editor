@@ -23,13 +23,14 @@ ActionNode = React.createClass
 RoleLane = React.createClass
   displayName: 'RoleLane'
   render: ->
+    @bottom = 0
+    @right = 0
+
     <div className='role-lane' data-role={@props.role}>
       <div className='lane-header'>角色：{@props.role}</div>
       <div className='lane-nodes' ref='nodes_panel'>
         {
           for id, action of @props.actions
-            @bottom ||= 0
-            @right ||= 0
             css_pos = action.css_pos()
             @bottom = Math.max @bottom, css_pos.bottom
             @right = Math.max @right, css_pos.right
@@ -40,6 +41,12 @@ RoleLane = React.createClass
     </div>
 
   componentDidMount: ->
+    @update()
+
+  componentDidUpdate: ->
+    @update()
+
+  update: ->
     # 修正 role panel 的宽高
     height = @bottom + 30
     width = @right + 30
@@ -52,9 +59,12 @@ RoleLane = React.createClass
 @OEPreviewer = React.createClass
   displayName: 'OEPreviewer'
   getInitialState: ->
-    graph: new OEActionsGraph @props.data
+    data: @props.data
+    # graph: new OEActionsGraph @props.data
 
   render: ->
+    @state.graph = new OEActionsGraph @state.data
+
     <div className='front-end-course-ware'>
       <canvas></canvas>
       {
@@ -64,6 +74,16 @@ RoleLane = React.createClass
     </div>
 
   componentDidMount: ->
+    jQuery(document).on 'editor:action-changed', (evt, actions)=>
+      data = {actions: actions}
+      @setState data: data
+
+    @change_arrows()
+
+  componentDidUpdate: ->
+    @change_arrows()
+
+  change_arrows: ->
     # 画动态箭头
     role_pos = {}
     for role, actions of @state.graph.roles
@@ -109,7 +129,7 @@ class OEActionsGraph
     for sub_graph in @sub_graphs
       sub_graph.offset_deep = offset_deep
       sub_graph.compute()
-      offset_deep = sub_graph.max_deep + 1
+      offset_deep = offset_deep + sub_graph.max_deep + 1
 
   _r_sub_graph: (action, sub_graph)->
     return if action.sub_graph?

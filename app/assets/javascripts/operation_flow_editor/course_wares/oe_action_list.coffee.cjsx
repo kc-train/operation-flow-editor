@@ -1,12 +1,12 @@
 OEActionSelectGrid = React.createClass
+  displayName: 'OEActionSelectGrid'
   getInitialState: ->
-    optional_actions: {}
     selected_ids: []
 
   render: ->
     <div className='actions-select-grid'>
       {
-        for id, action of @state.optional_actions
+        for id, action of @props.optional_actions
           klass = ['action']
           klass.push 'selected' if @state.selected_ids.indexOf(id) > -1
 
@@ -38,6 +38,7 @@ OEActionModal = React.createClass
     id: null
     name: ''
     role: '柜员'
+    optional_actions: {}
 
   render: ->
     if @state.id?
@@ -67,14 +68,21 @@ OEActionModal = React.createClass
             </div>
           </div>
         </div>
-        <div className='row'>
-          <div className='col-sm-12'>
-            <div className='form-group'>
-              <label>后续操作(点击选中)</label>
-              <OEActionSelectGrid ref='grids' />
+        {
+          if Object.keys(@state.optional_actions).length
+            klass = 'row'
+          else
+            klass = 'row hide'
+
+          <div className={klass}>
+            <div className='col-sm-12'>
+              <div className='form-group'>
+                <label>后续操作(点击选中)</label>
+                <OEActionSelectGrid ref='grids' optional_actions={@state.optional_actions} />
+              </div>
             </div>
           </div>
-        </div>
+        }
       </BSModal.Body>
       <BSModal.Footer>
         <BSButton onClick={@props.submit} bsstyle='primary'>
@@ -101,8 +109,9 @@ OEActionModal = React.createClass
 
     return @
 
-  set_optional_actions: (optional_actions)->
-    @refs.grids.setState optional_actions: optional_actions
+  set_optional_actions: (optional_actions, selected_ids)->
+    @setState optional_actions: optional_actions
+    @refs.grids.setState selected_ids: selected_ids.map (x)-> x
 
     return @
 
@@ -111,7 +120,7 @@ OEActionModal = React.createClass
     name = @state.name
     name = '未命名操作' if jQuery.trim(name).length is 0
     role = @state.role
-    post_action_ids = @refs.grids.state.selected_ids
+    post_action_ids = (_id for _id in @refs.grids.state.selected_ids)
 
     id: id
     name: name
@@ -123,6 +132,7 @@ OEActionModal = React.createClass
 
   on_role_change: (evt)->
     @setState role: evt.target.value
+
 
 @OEActionList = React.createClass
   displayName: 'OEActionList'
@@ -163,25 +173,53 @@ OEActionModal = React.createClass
 
     @refs.action_modal
       .set_action action
-      .set_optional_actions @state.actions
+      .set_optional_actions {}, []
       .show()
 
-  show_update_action_modal: (evt, react_id)->
-    $a = jQuery("[data-reactid='#{react_id}']")
+  show_update_action_modal: (evt)->
+    $a = jQuery evt.target
     $action = $a.closest('.action')
     id = $action.data('id')
 
+    action = @state.actions[id]
+    optional_actions = {}
+    all_pres_action_ids = Object.keys @get_all_pres_actions action
+
+    for a_id, _action of @state.actions
+      if all_pres_action_ids.indexOf(_action.id) < 0
+        optional_actions[_action.id] = _action
+
+    console.log action
     @refs.action_modal
-      .set_action @state.actions[id]
-      .set_optional_actions []
+      .set_action action
+      .set_optional_actions optional_actions, action.post_action_ids || []
       .show()
+
+  # 获取所有直接前置节点
+  get_pre_actions: (action)->
+    pre_actions = {}
+    for _id, _action of @state.actions
+      if (_action.post_action_ids || []).indexOf(action.id) > -1
+        pre_actions[_action.id] = _action
+    pre_actions 
+
+  get_all_pres_actions: (action)->
+    all_pres_actions = {}
+    @_r_ga action, all_pres_actions
+    all_pres_actions
+
+
+  _r_ga: (action, all_pres_actions)->
+    all_pres_actions[action.id] = action
+    for _id, _action of @get_pre_actions(action)
+      @_r_ga _action, all_pres_actions
+
 
   hide_action_modal: ->
     @refs.action_modal.hide()
 
   submit: ->
     action = @refs.action_modal.get_action_data()
-    # console.log action
     actions = @state.actions
     actions[action.id] = action
     @save_actions actions
@@ -195,6 +233,12 @@ OEActionModal = React.createClass
       actions = @state.actions
       delete actions[id]
 
+      # 从其他节点的后续节点中去掉
+      for _id, action of actions
+        if action.post_action_ids?
+          action.post_action_ids = action.post_action_ids.filter (x)->
+            x != id
+
       $action.fadeOut =>
         @save_actions actions
 
@@ -207,5 +251,24 @@ OEActionModal = React.createClass
     .done (res)=>
       @hide_action_modal()
       @setState actions: actions
+      jQuery(document).trigger 'editor:action-changed', actions
     .fail ->
       console.log 2
+
+
+# @OEFlowEditor = React.createClass
+#   displayName: 'OEFlowEditor'
+#   getInitialState: ->
+#     actions: @props.actions
+
+#   render: ->
+#     <div className='editor'>
+#       <OEActionList actions={@state.actions} update_url={@props.update_url} />
+#       <div className='preview'>
+#         <OEPreviewer data={actions: @state.actions} />
+#       </div>
+#     </div>
+
+#   componentDidMount: ->
+#     jQuery(document).on 'editor:action-changed', (evt, actions)=>
+#       @setState actions: actions
