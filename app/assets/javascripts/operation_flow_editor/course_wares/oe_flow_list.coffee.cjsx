@@ -84,10 +84,7 @@ OEFlowModal = React.createClass
                       <i className='fa fa-pencil'></i>
                       <span>设计</span>
                     </BSButton>
-                    <BSButton bssize='xs' onClick={@remove}>
-                      <i className='fa fa-trash'></i>
-                      <span>删除</span>
-                    </BSButton>
+
                   </div>
                 </td>
               </tr>
