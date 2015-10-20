@@ -111,6 +111,8 @@ OEFlowModal = React.createClass
       flow: flow
 
   submit: ->
+    console.log 'request'
+
     number = @refs.modal.state.flow.number || ''
     name = @refs.modal.state.flow.name || ''
     id = @refs.modal.state.flow.id
