@@ -1,0 +1,13 @@
+!!!
+%html{:lang => :zh}
+  %head
+    %meta{:'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8'}
+    %meta{:name => 'viewport', :content => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'}
+
+    %title 快速访谈记录工具
+    = csrf_meta_tags
+    = stylesheet_link_tag 'qcn/app', :media => 'screen'
+    = javascript_include_tag 'qcn/app'
+
+  %body.qcn
+    = yield

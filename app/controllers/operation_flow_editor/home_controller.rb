@@ -22,5 +22,9 @@ module OperationFlowEditor
         return
       end
     end
+
+    def qcn
+      render layout: 'qcn'
+    end
   end
 end

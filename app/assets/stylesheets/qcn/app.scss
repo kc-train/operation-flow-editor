@@ -1,0 +1,74 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+$fa-font-path: "../font-awesome/fonts" !default;
+@import "font-awesome/scss/font-awesome";
+
+body {
+  background-color: #ddd;
+  font-family: '微软雅黑', arial;
+  color: #444;
+}
+
+.quick-chat-note {
+  position: absolute;
+  top:5px;bottom:5px;
+  width:700px;left:0;right:0;
+  margin:auto;
+  background-color: #FFF;
+
+  .chater-group {
+    position: absolute;
+    top:0;bottom:0;width:80px;
+    background-color: #f6f6f6;
+    &.team-interviewer {
+      left:0;
+    }
+    &.team-interviewee {
+      right:0;
+    }
+
+    .chater {
+      display: block;
+      width: 50px;height:50px;line-height:50px;
+      font-size: 25px;
+      border-radius:100px;
+      margin:15px;
+      background-color: #44B2F5;
+      color:white;
+      text-align: center;
+      text-decoration: none;
+      &:hover {
+        background-color: darken(#44B2F5, 10%);
+      }
+    }
+
+    &.team-interviewer .chater{
+      background-color: #44B2F5;
+      &:hover {
+        background-color: darken(#44B2F5, 10%);
+      }
+    }
+    &.team-interviewee .chater{
+      background-color: #F18D05;
+      &:hover {
+        background-color: darken(#F18D05, 10%);
+      }
+    }
+
+    .add-btn {
+      display: block;
+      width: 50px;height:50px;line-height:50px;
+      font-size: 25px;
+      border-radius:100px;
+      margin:15px;
+      background-color: #ddd;
+      color:white;
+      text-align: center;
+      text-decoration: none;
+      &:hover {
+        background-color: #d1d1d1;
+      }
+    }
+  }
+}
