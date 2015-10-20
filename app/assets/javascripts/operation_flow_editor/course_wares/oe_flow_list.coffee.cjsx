@@ -111,8 +111,8 @@ OEFlowModal = React.createClass
       flow: flow
 
   submit: ->
-    number = @refs.modal.state.flow.number
-    name = @refs.modal.state.flow.name
+    number = @refs.modal.state.flow.number || ''
+    name = @refs.modal.state.flow.name || ''
     id = @refs.modal.state.flow.id
 
     if not id?
