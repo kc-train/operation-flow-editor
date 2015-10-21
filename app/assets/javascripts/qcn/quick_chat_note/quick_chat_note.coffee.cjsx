@@ -1,4 +1,5 @@
-AddChaterModal = React.createClass
+AddMemberModal = React.createClass
+  displayName: 'AddMemberModal'
   getInitialState: ->
     show: false
     name: ''
@@ -6,11 +7,11 @@ AddChaterModal = React.createClass
   render: ->
     <BSModal show={@state.show} bs_size='sm'>
       <BSModal.Header>
-        <BSModal.Title>新增谈话者</BSModal.Title>
+        <BSModal.Title>新增参与者</BSModal.Title>
       </BSModal.Header>
       <BSModal.Body>
         <div className='form-group'>
-          <input ref='name_inputer' name='name' className='form-control' type='text' placeholder='访谈者名字' value={@state.name} onChange={@on_name_change} />
+          <input ref='name_inputer' name='name' className='form-control' type='text' placeholder='参与者名字' value={@state.name} onChange={@on_name_change} />
         </div>
       </BSModal.Body>
       <BSModal.Footer>
@@ -34,45 +35,52 @@ AddChaterModal = React.createClass
     jQuery.trim(@state.name)
 
 
-Chater = React.createClass
+Member = React.createClass
+  displayName: 'Member'
   render: ->
     name = @props.name[0]
-    <a href='javascript:;' className='chater'>{name}</a>
-
-
-ChaterGroup = React.createClass
-  displayName: 'ChaterGroup'
-  getInitialState: ->
-    chaters: {}
-
-  render: ->
-    klass = ['chater-group', "team-#{@props.team}"]
-    <div className={klass.join(' ')}>
-      {
-        for name, data of @state.chaters
-          <Chater key={name} name={name} />
-      }
-
-      <a className='add-btn' href='javascript:;' onClick={@new_chater}>
-        <i className='fa fa-plus'></i>
+    <div className='member'>
+      <a href='javascript:;' className='name'>{name}</a>
+      <a href='javascript:;' className='remove' onClick={@props.remove}>
+        <i className='fa fa-times'></i>
       </a>
-      <AddChaterModal ref='modal' submit={@save_chater} />
     </div>
 
-  new_chater: ->
+
+MemberGroup = React.createClass
+  displayName: 'MemberGroup'
+  getInitialState: ->
+    members: {}
+
+  render: ->
+    klass = ['member-group', "group-#{@props.group}"]
+    <div className={klass.join(' ')}>
+      {
+        for name, data of @state.members
+          <Member key={name} name={name} />
+      }
+
+      <a className='add-btn' href='javascript:;' onClick={@new_member}>
+        <i className='fa fa-plus'></i>
+      </a>
+      <AddMemberModal ref='modal' submit={@save_member} />
+    </div>
+
+  new_member: ->
     @refs.modal.setState 
       show: true
       name: ''
 
-  save_chater: ->
+  save_member: ->
     name = @refs.modal.get_name()
-
     if name.length > 0
-      chaters = @state.chaters
-      chaters[name] = {}
-      @setState chaters: chaters
+      members = @state.members
+      members[name] = {}
+      @setState members: members
 
       @refs.modal.hide()
+      jQuery('.quick-chat-note').trigger 'qcn:save'
+
 
 ChatArea = React.createClass
   displayName: 'ChatArea'
@@ -84,7 +92,26 @@ ChatArea = React.createClass
   displayName: 'QuickChatNote'
   render: ->
     <div className='quick-chat-note'>
-      <ChaterGroup team='interviewer' />
+      <MemberGroup group='interviewer' ref='interviewer' />
       <ChatArea />
-      <ChaterGroup team='interviewee' />
+      <MemberGroup group='interviewee' ref='interviewee' />
     </div>
+
+  componentDidMount: ->
+    try
+      if localStorage['qcn']?
+        if data = JSON.parse localStorage['qcn']
+          @refs.interviewer.setState
+            members: data.interviewer_members
+          @refs.interviewee.setState
+            members: data.interviewee_members
+    catch
+      # ...
+
+    jQuery('.quick-chat-note').on 'qcn:save', =>
+      interviewer_members = @refs.interviewer.state.members
+      interviewee_members = @refs.interviewee.state.members
+
+      localStorage['qcn'] = JSON.stringify
+        interviewer_members: interviewer_members
+        interviewee_members: interviewee_members

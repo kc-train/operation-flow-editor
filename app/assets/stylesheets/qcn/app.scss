@@ -17,42 +17,76 @@ body {
   margin:auto;
   background-color: #FFF;
 
-  .chater-group {
+  .member-group {
     position: absolute;
     top:0;bottom:0;width:80px;
     background-color: #f6f6f6;
-    &.team-interviewer {
+    &.group-interviewer {
       left:0;
     }
-    &.team-interviewee {
+    &.group-interviewee {
       right:0;
     }
 
-    .chater {
-      display: block;
-      width: 50px;height:50px;line-height:50px;
-      font-size: 25px;
-      border-radius:100px;
-      margin:15px;
-      background-color: #44B2F5;
-      color:white;
-      text-align: center;
-      text-decoration: none;
+    .member {
+      position: relative;
+      width:80px;height:65px;
+
+      a.name{
+        position: absolute;
+        width: 50px;height:50px;line-height:50px;
+        font-size: 25px;
+        border-radius:100px;
+        top:15px;left:0;right:0;margin:auto;
+        background-color: #44B2F5;
+        color:white;
+        text-align: center;
+        text-decoration: none;
+        transition: all ease .2s;
+        &:hover {
+          background-color: darken(#44B2F5, 10%);
+        }
+      }
+      a.remove {
+        position: absolute;
+        width:15px;height:15px;line-height:15px;
+        border-radius:100px;
+        color:white;
+        background-color: lighten(#E54028, 10%);
+        text-align: center;
+        font-size: 13px;
+        top:15px;right:0;
+        opacity: 0;
+        pointer-events: none;
+        transition: all ease .2s;
+        i{
+          position: relative;
+          top: -1px;
+        }
+      }
+
       &:hover {
-        background-color: darken(#44B2F5, 10%);
+        a.remove {
+          opacity: 1;
+          pointer-events: all;
+          &:hover {
+            background-color: #E54028;
+          }
+        }
       }
     }
 
-    &.team-interviewer .chater{
+
+    &.group-interviewer .member a.name{
       background-color: #44B2F5;
       &:hover {
         background-color: darken(#44B2F5, 10%);
       }
     }
-    &.team-interviewee .chater{
+    &.group-interviewee .member a.name{
       background-color: #F18D05;
       &:hover {
-        background-color: darken(#F18D05, 10%);
+        background-color: darken(#F18D05, 5%);
       }
     }
 
