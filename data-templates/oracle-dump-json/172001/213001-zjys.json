@@ -1,0 +1,385 @@
+[
+  // 20151022151433
+  // http://192.168.0.155:3000/admin/jyzbs/215034.json
+
+  {
+    "jydm": "215034",
+    "jymc": "检查是否记名卡                       ",
+    "srpmh1": "2150340",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "1",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160309
+  // http://192.168.0.155:3000/admin/jyzbs/180026.json
+
+  {
+    "jydm": "180026",
+    "jymc": "查询客户基本信息                      ",
+    "srpmh1": "1800099",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "2",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160329
+  // http://192.168.0.155:3000/admin/jyzbs/117100.json
+
+  {
+    "jydm": "117100",
+    "jymc": "建立个人客户信息                      ",
+    "srpmh1": "1171000",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "1171009",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160342
+  // http://192.168.0.155:3000/admin/jyzbs/180029.json
+
+  {
+    "jydm": "180029",
+    "jymc": "显示查询信息                        ",
+    "srpmh1": "1853009",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": " ",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160355
+  // http://192.168.0.155:3000/admin/jyzbs/216047.json
+
+  {
+    "jydm": "216047",
+    "jymc": "发卡检查                          ",
+    "srpmh1": "       ",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": " ",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160427
+  // http://192.168.0.155:3000/admin/jyzbs/218062.json
+
+  {
+    "jydm": "218062",
+    "jymc": "单位卡开卡流程                       ",
+    "srpmh1": "2180620",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160440
+  // http://192.168.0.155:3000/admin/jyzbs/218063.json
+
+  {
+    "jydm": "218063",
+    "jymc": "个人卡开卡流程                       ",
+    "srpmh1": "2180630",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160456
+  // http://192.168.0.155:3000/admin/jyzbs/218064.json
+
+  {
+    "jydm": "218064",
+    "jymc": "单位卡开卡交易录入                     ",
+    "srpmh1": "2180640",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160507
+  // http://192.168.0.155:3000/admin/jyzbs/218066.json
+
+  {
+    "jydm": "218066",
+    "jymc": "活期开户交易类别录入                    ",
+    "srpmh1": "       ",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "2180660",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "2",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160524
+  // http://192.168.0.155:3000/admin/jyzbs/218065.json
+
+  {
+    "jydm": "218065",
+    "jymc": "存款存入对方转入                      ",
+    "srpmh1": "2180650",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160534
+  // http://192.168.0.155:3000/admin/jyzbs/990005.json
+
+  {
+    "jydm": "990005",
+    "jymc": "销挂账转入处理                       ",
+    "srpmh1": "9900050",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": " ",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160546
+  // http://192.168.0.155:3000/admin/jyzbs/218007.json
+
+  {
+    "jydm": "218007",
+    "jymc": "有折开卡信息录入                      ",
+    "srpmh1": "2180070",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": " ",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160558
+  // http://192.168.0.155:3000/admin/jyzbs/213001.json
+
+  {
+    "jydm": "213001",
+    "jymc": "主卡发卡                          ",
+    "srpmh1": "       ",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "2130018",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "2",
+    "jysx": "1 ",
+    "ldlcbz": null
+  },
+
+  // 20151022160611
+  // http://192.168.0.155:3000/admin/jyzbs/275410.json
+
+  {
+    "jydm": "275410",
+    "jymc": "补登存折                          ",
+    "srpmh1": "2754100",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "2754108",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": " ",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160625
+  // http://192.168.0.155:3000/admin/jyzbs/180061.json
+
+  {
+    "jydm": "180061",
+    "jymc": "VIP客户交易提示打印                   ",
+    "srpmh1": "       ",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "       ",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  },
+
+  // 20151022160641
+  // http://192.168.0.155:3000/admin/jyzbs/185001.json
+
+  {
+    "jydm": "185001",
+    "jymc": "建立客户基本信息                      ",
+    "srpmh1": "1851009",
+    "srpmh2": "       ",
+    "srpmh3": "       ",
+    "srpmh4": "       ",
+    "srpmh5": "       ",
+    "srpmh6": "       ",
+    "srpmh7": "       ",
+    "srpmh8": "       ",
+    "xypmh": "1851010",
+    "fhpmh": "       ",
+    "tjlx": "0",
+    "bbh": "           ",
+    "cldm": "      ",
+    "fhlx": "0",
+    "jysx": "  ",
+    "ldlcbz": null
+  }
+]

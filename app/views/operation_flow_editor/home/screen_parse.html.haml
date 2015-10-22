@@ -1,0 +1,22 @@
+.page-screen-parse
+  %ul
+    %li 
+      %p 
+        %span 根据 XMDM = 172001
+        %br
+        %span 查询 CDJG 得知对应 JYDM = 213001
+
+    %li
+      %p 
+        %span 根据 JYDM = 213001
+        %br
+        %span 查询 JYLD 得知包括如下子交易
+        %span{style: 'color: #d33'} （根据 XH 排序后）：
+      = react_component 'JYLDParse', json: '172001/jyld-jydm-213001'
+
+    %li
+      %p
+        %span 根据各个子交易代码
+        %br
+        %span 查询 JYZB 得到每个子交易包括的屏幕数
+      = react_component 'ZJYList', json: '172001/213001-zjys'

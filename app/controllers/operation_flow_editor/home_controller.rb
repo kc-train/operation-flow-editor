@@ -26,5 +26,11 @@ module OperationFlowEditor
     def qcn
       render layout: 'qcn'
     end
+
+    def oracle_json
+      path = File.join __dir__, '../../..', "data-templates/oracle-dump-json/#{params[:path]}.json"
+      str = File.read path
+      render json: JSON.parse(str)
+    end
   end
 end

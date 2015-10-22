@@ -7,5 +7,6 @@ OperationFlowEditor::Engine.routes.draw do
   get '/editor/:flow_id/actions', to: 'editor#actions'
   put '/editor/:flow_id/actions', to: 'editor#update_actions', as: 'update_actions'
 
-  get '/quick-chat-note', to: 'home#qcn'
+  get '/demo/screen_parse', to: 'home#screen_parse'
+  get '/oracle_json', to: 'home#oracle_json'
 end
