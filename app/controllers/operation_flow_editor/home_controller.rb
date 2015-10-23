@@ -32,5 +32,15 @@ module OperationFlowEditor
       str = File.read path
       render json: JSON.parse(str)
     end
+
+    def screen
+      path = File.join __dir__, '../../..', "data-templates/oracle-dump-json/172001/hmzds-#{params[:id]}.json"
+      str = File.read path
+      @data = JSON.parse(str)
+
+      path = File.join __dir__, '../../..', "data-templates/oracle-dump-json/172001/xxmxs-#{params[:id]}.json"
+      str = File.read path
+      @xxmxs = JSON.parse(str)
+    end
   end
 end

@@ -1,0 +1,227 @@
+// 20151023172355
+// http://192.168.0.189:3000/admin/xxmxes.json?utf8=%E2%9C%93&q%5Bxxdm_contains%5D=tls001&commit=Filter&order=xxdm%2Cxxqz%2Cxxzb_desc
+
+[
+  {
+    "xxdm": "tls001",
+    "xxmc": "无授权权限操作员                        ",
+    "xxqz": "0                             ",
+    "xxzb": null,
+    "raw_rnum_": 1
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "有个人授权权限操作员                    ",
+    "xxqz": "1                             ",
+    "xxzb": null,
+    "raw_rnum_": 2
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "有单位授权权限操作员                    ",
+    "xxqz": "2                             ",
+    "xxzb": null,
+    "raw_rnum_": 3
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "营业机构业务主管                        ",
+    "xxqz": "3                             ",
+    "xxzb": null,
+    "raw_rnum_": 4
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "基层社主任                              ",
+    "xxqz": "4                             ",
+    "xxzb": null,
+    "raw_rnum_": 5
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "联社管理员                              ",
+    "xxqz": "5                             ",
+    "xxzb": null,
+    "raw_rnum_": 6
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "联社主任                                ",
+    "xxqz": "6                             ",
+    "xxzb": null,
+    "raw_rnum_": 7
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "办事处管理员                            ",
+    "xxqz": "7                             ",
+    "xxzb": null,
+    "raw_rnum_": 8
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "区中心管理员                            ",
+    "xxqz": "8                             ",
+    "xxzb": null,
+    "raw_rnum_": 9
+  },
+  {
+    "xxdm": "tls001",
+    "xxmc": "区联社管理员                            ",
+    "xxqz": "9                             ",
+    "xxzb": null,
+    "raw_rnum_": 10
+  },
+
+// 20151023175957
+// http://192.168.0.189:3000/admin/xxmxes.json?utf8=%E2%9C%93&q%5Bxxdm_contains%5D=115002&commit=Filter&order=xxdm%2Cxxqz%2Cxxzb_desc
+
+  {
+    "xxdm": "115002",
+    "xxmc": "男                                      ",
+    "xxqz": "0                             ",
+    "xxzb": null,
+    "raw_rnum_": 1
+  },
+  {
+    "xxdm": "115002",
+    "xxmc": "女                                      ",
+    "xxqz": "1                             ",
+    "xxzb": null,
+    "raw_rnum_": 2
+  },
+  {
+    "xxdm": "115002",
+    "xxmc": "未知性别                                ",
+    "xxqz": "2                             ",
+    "xxzb": null,
+    "raw_rnum_": 3
+  },
+  {
+    "xxdm": "115002",
+    "xxmc": "未说明性别                              ",
+    "xxqz": "3                             ",
+    "xxzb": null,
+    "raw_rnum_": 4
+  },
+
+// 20151023180322
+// http://192.168.0.189:3000/admin/xxmxes.json?utf8=%E2%9C%93&q%5Bxxdm_contains%5D=115010&commit=Filter&order=xxdm%2Cxxqz%2Cxxzb_desc
+
+  {
+    "xxdm": "115010",
+    "xxmc": "联行业务柜员                            ",
+    "xxqz": "11                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 1
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "内部账柜员                              ",
+    "xxqz": "13                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 2
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "制卡员                                  ",
+    "xxqz": "15                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 3
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "库管员                                  ",
+    "xxqz": "17                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 4
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "稽核员                                  ",
+    "xxqz": "19                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 5
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "管理柜员                                ",
+    "xxqz": "21                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 6
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "自助设备柜员                            ",
+    "xxqz": "23                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 7
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "虚拟柜员                                ",
+    "xxqz": "98                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 8
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "空                                      ",
+    "xxqz": "                              ",
+    "xxzb": "0                   ",
+    "raw_rnum_": 9
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "对公业务柜员                            ",
+    "xxqz": "01                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 10
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "储蓄业务柜员                            ",
+    "xxqz": "03                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 11
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "综合柜员                                ",
+    "xxqz": "05                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 12
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "贷款业务柜员                            ",
+    "xxqz": "07                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 13
+  },
+  {
+    "xxdm": "115010",
+    "xxmc": "中间业务柜员                            ",
+    "xxqz": "09                            ",
+    "xxzb": "1                   ",
+    "raw_rnum_": 14
+  },
+
+// 20151023180348
+// http://192.168.0.189:3000/admin/xxmxes.json?utf8=%E2%9C%93&q%5Bxxdm_contains%5D=tls100&commit=Filter&order=xxdm%2Cxxqz%2Cxxzb_desc
+
+  {
+    "xxdm": "tls100",
+    "xxmc": "动态密码                                ",
+    "xxqz": "0                             ",
+    "xxzb": "                    ",
+    "raw_rnum_": 1
+  },
+  {
+    "xxdm": "tls100",
+    "xxmc": "指纹仪                                  ",
+    "xxqz": "1                             ",
+    "xxzb": "                    ",
+    "raw_rnum_": 2
+  }
+]

@@ -49,7 +49,7 @@ ZJYWithScreen = React.createClass
           for str in arr
             klass = ['screen']
             klass.push 'exist' if str.match /[0-9]{6}/
-            <div className={klass.join(' ')}>{str}</div>
+            <a href="/screen/#{str}" target='_blank' className={klass.join(' ')}>{str}</a>
         }
       </div>
     </div>
@@ -75,3 +75,50 @@ ZJYWithScreen = React.createClass
       console.log res
       zjys = @state.zjys
       @setState zjys: res
+
+
+@ScreenRender = React.createClass
+  getInitialState: ->
+    data = @props.data.sort (a, b)->
+      parseInt(a.zdxh) - parseInt(b.zdxh)
+
+    data: data
+    xxmxs: @props.xxmxs
+
+  render: ->
+    <div className='screen-render'>
+      {
+        for zd in @state.data
+          xxmxs = @state.xxmxs.filter (x)->
+            x.xxdm is zd.xxdm
+
+          <ScreenZD key={zd.zdxh} zd={zd} xxmxs={xxmxs} />
+      }
+    </div>
+
+ScreenZD = React.createClass
+  render: ->
+    zd = @props.zd
+    top = (zd.y - 1) * 30
+    left = (zd.x - 1) * 10
+
+    klass = ['screen-zd']
+    czfs = ['edit', 'output', 'show', 'hide'][zd.czfs]
+    klass.push "czfs-#{czfs}"
+
+    width = zd.w * 10
+
+    <div className={klass.join(' ')} style={top: "#{top}px", left: "#{left}px"}>
+      <label data-qsh={zd.qsh} data-qsl={zd.qsl}>{zd.zdbt} {zd.xxdm}</label>
+      {
+        if zd.zdlx is '2'
+          <select style={width: "#{width + 30}px"} >
+            {
+              for xxmx in @props.xxmxs
+                <option key={xxmx.raw_rnum_}>{xxmx.xxqz}- {xxmx.xxmc}</option>
+            }
+          </select>
+        else
+          <input type='text' style={width: "#{width}px"} />
+      }
+    </div>

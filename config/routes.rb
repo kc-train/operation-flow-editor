@@ -9,4 +9,5 @@ OperationFlowEditor::Engine.routes.draw do
 
   get '/demo/screen_parse', to: 'home#screen_parse'
   get '/oracle_json', to: 'home#oracle_json'
+  get '/screen/:id', to: 'home#screen'
 end
