@@ -42,5 +42,10 @@ module OperationFlowEditor
       str = File.read path
       @xxmxs = JSON.parse(str)
     end
+
+    def xmdm
+      path = File.join __dir__, '../../..', "data-templates/oracle-dump-json/#{params[:xmdm]}.json"
+      @data = JSON.parse File.read path
+    end
   end
 end
