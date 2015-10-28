@@ -6,6 +6,7 @@ module OperationFlowEditor
     field :number
     field :name
     field :actions
+    field :gtd_status # half almost done
 
     default_scope ->{ order(:id.desc) }
 
@@ -20,6 +21,7 @@ module OperationFlowEditor
         id: id.to_s,
         number: number,
         name: name,
+        gtd_status: gtd_status
       }
     end
   end

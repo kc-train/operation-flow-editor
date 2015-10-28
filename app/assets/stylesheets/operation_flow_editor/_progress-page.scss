@@ -1,0 +1,63 @@
+.progress-page {
+  h3{
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
+  .total-progress {
+    max-width: 500px;
+    h4 {
+      float: left;
+      height: 20px;line-height:20px;
+      margin-bottom: 20px;
+      margin-top: 0;
+      width: 60px;
+    }
+  }
+
+  .transactions {
+    margin-top: 20px;
+    @include clearfix;
+    .transaction {
+      width: 150px;
+      background-color: #f4f4f4;
+      float: left;
+      margin-right: 15px;
+      margin-bottom: 15px;
+      border: solid 1px rgba(black, 0.1);
+      .id {
+        font-family: arial;
+        height:20px;line-height:20px;
+        background-color: rgba(black, 0.05);
+        padding:0 8px;
+      }
+      .name {
+        height:51px;line-height: 20px;
+        padding:5px 8px;
+        border-bottom: dashed 1px #ccc;
+      }
+      .status {
+        height:80px;line-height: 20px;
+        .tip {
+          height:20px;line-height:20px;
+          padding:0 8px;
+          font-size: 13px;
+        }
+        .tip.danger {
+          color: white;
+          background-color: #E54028;
+        }
+      }
+      .transaction-progress {
+        border-top:solid 1px #ddd;
+        .progress {
+          margin-bottom: 0;
+          margin: 1px;
+          border-radius:0;
+          background-color: #FFF;
+          box-shadow:none;
+        }
+      }
+    }
+  }
+}

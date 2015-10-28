@@ -12,4 +12,6 @@ OperationFlowEditor::Engine.routes.draw do
   get '/screen/:id', to: 'home#screen'
 
   get '/xmdm/:xmdm', to: 'home#xmdm'
+
+  get '/progress', to: 'home#progress'
 end

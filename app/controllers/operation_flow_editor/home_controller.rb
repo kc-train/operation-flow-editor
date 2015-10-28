@@ -47,5 +47,9 @@ module OperationFlowEditor
       path = File.join __dir__, '../../..', "data-templates/oracle-dump-json/#{params[:xmdm]}.json"
       @data = JSON.parse File.read path
     end
+
+    def progress
+      @all_transactions_data = JSON.parse File.read File.join __dir__, '../../..', "progress-data/all-transactions.json"
+    end
   end
 end

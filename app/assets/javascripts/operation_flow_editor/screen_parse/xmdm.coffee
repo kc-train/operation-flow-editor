@@ -5,7 +5,7 @@ ScreenZD = React.createClass
 
     top = (data.qsh - 0) * lh
     left = (data.qsl - 0) * lh * 0.3
-    width = data.zdcd * 6
+    width = data.zdcd * lh * 0.3
 
     klass = ['zd']
     czfs = ['edit', 'output', 'show', 'hide'][data.czfs]

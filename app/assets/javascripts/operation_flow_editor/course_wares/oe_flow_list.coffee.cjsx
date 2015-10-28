@@ -6,7 +6,13 @@ OEFlowModal = React.createClass
   render: ->
     <BSModal show={@state.show_modal}>
       <BSModal.Header>
-        <BSModal.Title>增加操作流程</BSModal.Title>
+        {
+          if @state.flow.id?
+            <BSModal.Title>修改操作流程</BSModal.Title>
+          else
+            <BSModal.Title>增加操作流程</BSModal.Title>
+        }
+        
       </BSModal.Header>
       <BSModal.Body>
         <div className='form-group'>
@@ -15,6 +21,18 @@ OEFlowModal = React.createClass
         <div className='form-group'>
           <input className='form-control' type='text' placeholder='名称' ref='name_inputer' value={@state.flow.name} onChange={@name_changed} />
         </div>
+        {
+          if @state.flow.id?
+            <div className='form-group'>
+              <label>流程制作状态</label>
+              <select className='form-control' ref='gtd_status_inputer' value={@state.flow.gtd_status} onChange={@gtd_status_changed} >
+                <option value='init'>才开始</option>
+                <option value='half'>做一半了</option>
+                <option value='almost'>快做完了</option>
+                <option value='done'>做完了</option>
+              </select>
+            </div>
+        }
       </BSModal.Body>
       <BSModal.Footer>
         <BSButton onClick={@props.submit} bsstyle='primary'>
@@ -38,6 +56,11 @@ OEFlowModal = React.createClass
   name_changed: (evt)->
     flow = @state.flow
     flow.name = evt.target.value
+    @setState flow: flow
+
+  gtd_status_changed: (evt)->
+    flow = @state.flow
+    flow.gtd_status = evt.target.value
     @setState flow: flow
 
 @OEFlowList = React.createClass
@@ -65,15 +88,25 @@ OEFlowModal = React.createClass
           <th>id</th>
           <th>number</th>
           <th>name</th>
+          <th>GTD status</th>
           <th>ops</th>
         </tr></thead>
         <tbody>
           {
             for flow in @state.flows
+              gtd_status = flow.gtd_status || 'init'
+              status_str = {
+                init: '才开始'
+                half: '做一半了'
+                almost: '快做完了'
+                done: '做完了'
+              }[gtd_status]
+
               <tr data-id={flow.id} key={flow.id} className='flow'>
                 <td>{flow.id}</td>
                 <td>{flow.number}</td>
                 <td>{flow.name}</td>
+                <td>{status_str}</td>
                 <td>
                   <div className='btn-group'>
                     <BSButton bssize='xs' onClick={@show_update_modal}>
@@ -84,7 +117,6 @@ OEFlowModal = React.createClass
                       <i className='fa fa-pencil'></i>
                       <span>设计</span>
                     </BSButton>
-
                   </div>
                 </td>
               </tr>
@@ -116,6 +148,7 @@ OEFlowModal = React.createClass
     number = @refs.modal.state.flow.number || ''
     name = @refs.modal.state.flow.name || ''
     id = @refs.modal.state.flow.id
+    gtd_status = @refs.modal.state.flow.gtd_status
 
     if not id?
       jQuery.ajax
@@ -135,6 +168,8 @@ OEFlowModal = React.createClass
         console.log 2
 
     else
+
+      console.log gtd_status
       jQuery.ajax
         url: "./flows/#{id}"
         type: 'PUT'
@@ -142,6 +177,7 @@ OEFlowModal = React.createClass
           flow:
             number: number
             name: name
+            gtd_status: gtd_status
       .done (res)=>
         flows = @state.flows
         for flow in flows
