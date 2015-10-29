@@ -4,7 +4,7 @@
     for d in @props.data
       total += d.progress
     p0 = ~~(total / @props.data.length)
-    p1 = 0
+    p1 = 50
     p2 = 0
     p3 = 0
 
@@ -49,7 +49,9 @@ Transaction = React.createClass
     p = @props.data.progress
 
     <div className='transaction'>
-      <div className='id'>#{@props.data.id}</div>
+      <div className='id'>
+        <a href="/xmdm/#{@props.data.id}" target='_blank'>#{@props.data.id}</a>
+      </div>
       <div className='name'>{@props.data.name}</div>
       <div className='status'>
         {
