@@ -50,6 +50,24 @@ module OperationFlowEditor
 
     def progress
       @all_transactions_data = JSON.parse File.read File.join __dir__, '../../..', "progress-data/all-transactions.json"
+
+      flows_hash = {}
+      OperationFlowEditor::Flow.all.each do |flow|
+        flows_hash[flow.number] = {
+          mongodb_id: flow.id.to_s,
+          progress: flow.progress
+        }
+      end
+      
+      @all_transactions_data.each do |x|
+        id = x['id']
+        if not (flow = flows_hash[id]).nil?
+          x['mongodb_id'] = flow[:mongodb_id]
+          x['progress'] = flow[:progress]
+        else
+          x['progress'] = 0
+        end
+      end
     end
   end
 end

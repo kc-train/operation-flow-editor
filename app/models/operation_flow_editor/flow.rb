@@ -6,7 +6,7 @@ module OperationFlowEditor
     field :number
     field :name
     field :actions
-    field :gtd_status # half almost done
+    field :gtd_status # init half almost done
 
     default_scope ->{ order(:id.desc) }
 
@@ -23,6 +23,21 @@ module OperationFlowEditor
         name: name,
         gtd_status: gtd_status
       }
+    end
+
+    def progress
+      h = {
+        'init' => 25,
+        'half' => 50,
+        'almost' => 75,
+        'done' => 100
+      }
+
+      unless (pr = h[gtd_status]).nil?
+        return pr
+      else
+        return 25
+      end
     end
   end
 end
