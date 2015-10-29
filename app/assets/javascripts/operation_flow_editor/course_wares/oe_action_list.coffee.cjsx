@@ -39,6 +39,7 @@ OEActionModal = React.createClass
     name: ''
     role: '柜员'
     optional_actions: {}
+    saving: false
 
   render: ->
     if @state.id?
@@ -85,10 +86,18 @@ OEActionModal = React.createClass
         }
       </BSModal.Body>
       <BSModal.Footer>
-        <BSButton onClick={@props.submit} bsstyle='primary'>
-          <i className='fa fa-ok'></i>
-          <span>确定保存</span>
-        </BSButton>
+        {
+          if @state.saving
+            <div className='saving'>
+              <i className='fa fa-spinner fa-pulse' />
+              <span>正在保存</span>
+            </div>
+          else
+            <BSButton onClick={@props.submit} bsstyle='primary'>
+              <i className='fa fa-ok'></i>
+              <span>确定保存</span>
+            </BSButton>
+        }
         <BSButton onClick={@hide}>
           <span>关闭</span>
         </BSButton>
@@ -96,7 +105,9 @@ OEActionModal = React.createClass
     </BSModal>
 
   show: ->
-    @setState show: true
+    @setState 
+      show: true
+      saving: false
 
   hide: ->
     @setState show: false
@@ -243,6 +254,8 @@ OEActionModal = React.createClass
         @save_actions actions
 
   save_actions: (actions)->
+    @refs.action_modal.setState saving: true
+
     jQuery.ajax
       url: @props.update_url
       type: 'PUT'

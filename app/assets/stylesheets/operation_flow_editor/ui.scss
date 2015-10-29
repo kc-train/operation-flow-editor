@@ -278,3 +278,13 @@ body.operation-flow-editor {
     }
   }
 }
+
+.modal .modal-footer {
+  .saving {
+    float: left;
+    height: 34px; line-height: 34px;
+    background-color: lighten(#FFCC3F, 20%);
+    border-radius: 3px;
+    padding:0 10px;
+  }
+}

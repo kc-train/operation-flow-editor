@@ -2,6 +2,7 @@ OEFlowModal = React.createClass
   getInitialState: ->
     show_modal: false
     flow: {}
+    saving: false
 
   render: ->
     <BSModal show={@state.show_modal}>
@@ -16,9 +17,11 @@ OEFlowModal = React.createClass
       </BSModal.Header>
       <BSModal.Body>
         <div className='form-group'>
+          <label>编号</label>
           <input className='form-control' type='text' placeholder='编号' ref='number_inputer' value={@state.flow.number} onChange={@number_changed} />
         </div>
         <div className='form-group'>
+          <label>名称</label>
           <input className='form-control' type='text' placeholder='名称' ref='name_inputer' value={@state.flow.name} onChange={@name_changed} />
         </div>
         {
@@ -35,10 +38,18 @@ OEFlowModal = React.createClass
         }
       </BSModal.Body>
       <BSModal.Footer>
-        <BSButton onClick={@props.submit} bsstyle='primary'>
-          <i className='fa fa-ok'></i>
-          <span>确定保存</span>
-        </BSButton>
+        {
+          if @state.saving
+            <div className='saving'>
+              <i className='fa fa-spinner fa-pulse' />
+              <span>正在保存</span>
+            </div>
+          else
+            <BSButton onClick={@props.submit} bsstyle='primary'>
+              <i className='fa fa-ok'></i>
+              <span>确定保存</span>
+            </BSButton>
+        }
         <BSButton onClick={@close_modal}>
           <span>关闭</span>
         </BSButton>
@@ -46,7 +57,8 @@ OEFlowModal = React.createClass
     </BSModal>
 
   close_modal: ->
-    @setState show_modal: false
+    @setState 
+      show_modal: false
 
   number_changed: (evt)->
     flow = @state.flow
@@ -129,6 +141,7 @@ OEFlowModal = React.createClass
     @refs.modal.setState
       show_modal: true
       flow: {}
+      saving: false
 
   show_update_modal: (evt)->
     $btn = jQuery(evt.target)
@@ -141,14 +154,16 @@ OEFlowModal = React.createClass
     @refs.modal.setState
       show_modal: true
       flow: flow
+      saving: false
 
   submit: ->
-    console.log 'request'
+    id = @refs.modal.state.flow.id
 
     number = @refs.modal.state.flow.number || ''
     name = @refs.modal.state.flow.name || ''
-    id = @refs.modal.state.flow.id
-    gtd_status = @refs.modal.state.flow.gtd_status
+    gtd_status = @refs.modal.state.flow.gtd_status || 'init'
+
+    @refs.modal.setState saving: true
 
     if not id?
       jQuery.ajax
@@ -161,15 +176,12 @@ OEFlowModal = React.createClass
       .done (res)=>
         flows = @state.flows
         flows = [res].concat flows
-        @setState
-          flows: flows
+        @setState flows: flows
         @refs.modal.close_modal()
       .fail ->
         console.log 2
 
     else
-
-      console.log gtd_status
       jQuery.ajax
         url: "./flows/#{id}"
         type: 'PUT'
@@ -184,8 +196,8 @@ OEFlowModal = React.createClass
           if flow.id == id
             flow.name = name
             flow.number = number
-        @setState
-          flows: flows
+            flow.gtd_status = gtd_status
+        @setState flows: flows
         @refs.modal.close_modal()
       .fail ->
         console.log 2
