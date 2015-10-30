@@ -49,6 +49,8 @@ module OperationFlowEditor
     end
 
     def progress
+      @screen_count_data = JSON.parse File.read File.join __dir__, '../../..', "progress-data/screens_count.json"
+
       @all_transactions_data = JSON.parse File.read File.join __dir__, '../../..', "progress-data/all-transactions.json"
 
       flows_hash = {}
@@ -66,6 +68,10 @@ module OperationFlowEditor
           x['progress'] = flow[:progress]
         else
           x['progress'] = 0
+        end
+
+        if (sd = @screen_count_data[id]).present?
+          x['screen_data'] = sd
         end
       end
     end

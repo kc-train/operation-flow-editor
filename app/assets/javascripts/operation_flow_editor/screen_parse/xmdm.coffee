@@ -62,11 +62,17 @@ ZJY = React.createClass
       }
       {
         if @props.data.response_screen?
-          <div className='response_screen'></div>
+          s = @props.data.response_screen
+          <div className='response_screen'>
+            <Screen key={s.hmdm} data={s} />
+          </div>
       }
       {
         if @props.data.compound_screen?
-          <div className='compound_screen'></div>
+          s = @props.data.compound_screen
+          <div className='compound_screen'>
+            <Screen key={s.hmdm} data={s} />
+          </div>
       }
     </div>
 
@@ -77,8 +83,10 @@ ZJY = React.createClass
       <h3>项目代码： #{@props.xmdm}</h3>
       <div className='zjys'>
         {
+          idx = -1
           for zjydata in @props.data
-            <ZJY key={zjydata.jydm} data={zjydata} />
+            idx += 1
+            <ZJY key={idx} data={zjydata} />
         }
       </div>
     </div>
