@@ -100,6 +100,7 @@ OEFlowModal = React.createClass
           <th>id</th>
           <th>number</th>
           <th>name</th>
+          <th>stat</th>
           <th>GTD status</th>
           <th>ops</th>
         </tr></thead>
@@ -118,6 +119,7 @@ OEFlowModal = React.createClass
                 <td>{flow.id}</td>
                 <td>{flow.number}</td>
                 <td>{flow.name}</td>
+                <td>节点:{flow.actions.total} 柜员:{flow.actions.gy_count} 客户:{flow.actions.kh_count}</td>
                 <td>{status_str}</td>
                 <td>
                   <div className='btn-group'>

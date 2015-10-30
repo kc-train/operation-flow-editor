@@ -17,11 +17,27 @@ module OperationFlowEditor
     end
 
     def simple_json
+      if actions
+        actions_count = actions.count
+        p actions
+        gy_count = actions.values.select {|x| x['role'] == '柜员'}.length
+        kh_count = actions.values.select {|x| x['role'] == '客户'}.length
+      else
+        actions_count = 0
+        gy_count = 0
+        kh_count = 0
+      end
+
       {
         id: id.to_s,
         number: number,
         name: name,
-        gtd_status: gtd_status
+        gtd_status: gtd_status,
+        actions: {
+          total: actions_count,
+          gy_count: gy_count,
+          kh_count: kh_count
+        }
       }
     end
 
