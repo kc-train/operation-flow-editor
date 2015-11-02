@@ -26,8 +26,24 @@ module OperationFlowEditor
     end
 
     def screen
-      path = File.join __dir__, '../../..', "progress-data/export/#{params[:xmdm]}.json"
-      @screen_data = JSON.parse File.read path
+      @data = get_screen_data params[:xmdm], params[:hmdm]
     end
+
+    private
+      # 根据项目代码和画面代码找到画面数据
+      def get_screen_data(xmdm, hmdm)
+        path = File.join __dir__, '../../..', "progress-data/export/#{xmdm}.json"
+
+        xm_data = JSON.parse File.read path
+
+        xm_data.map {|zjy|
+          screens = zjy['input_screens'] || []
+          screens.push zjy['response_screen']
+          screens.push zjy['compound_screen']
+          screens.compact!
+        }.flatten.select { |screen|
+          screen['hmdm'] == hmdm
+        }.first
+      end
   end
 end

@@ -8,6 +8,9 @@ $fa-font-path: "../font-awesome/fonts" !default;
 @import "screen-parse";
 @import "progress-page";
 
+@import "refector/ofc_teller_screen";
+@import "refector/ofc_flow_screens";
+
 body {
   background-color: #fafafa;
   font-family: '微软雅黑', arial;
