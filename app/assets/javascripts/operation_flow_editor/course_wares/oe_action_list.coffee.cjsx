@@ -145,10 +145,68 @@ OEActionModal = React.createClass
     @setState role: evt.target.value
 
 
+OEScreenModal = React.createClass
+  render: ->
+    <BSModal.FormModal ref='modal' title="关联屏幕 - 代码：#{@props.flow.number}" bs_size='lg'>
+      <div className='screen-table'>
+        <ScreensTable data={@props.screen_data} xmdm={@props.flow.number} />
+      </div>
+    </BSModal.FormModal>
+
+  show: ->
+    @refs.modal.show()
+
+ScreensTable = React.createClass
+  displayName: 'ScreensTable'
+  render: ->
+    <table className='table table-striped table-bordered'>
+      <thead><tr>
+        <th>联动交易</th><th>输入屏幕</th><th>响应屏幕</th><th>复核屏幕</th>
+      </tr></thead>
+      <tbody>
+      {
+        idx = 0
+        for ldjy in @props.data
+          <tr key={idx++}>
+            <td>{ldjy.jymc}-{ldjy.jydm}</td>
+            <td>
+            {
+              for screen in ldjy.input_screens || []
+                <ScreensTable.Screen key={screen.hmdm} data={screen} xmdm={@props.xmdm} />
+            }
+            </td>
+            <td>
+            {
+              if ldjy.response_screen?
+                <ScreensTable.Screen data={ldjy.response_screen} xmdm={@props.xmdm} />
+            }
+            </td>
+            <td>
+            {
+              if ldjy.compound_screen
+                <ScreensTable.Screen data={ldjy.compound_screen} xmdm={@props.xmdm} />
+            }
+            </td>
+          </tr>
+      }
+      </tbody>
+    </table>
+
+  statics: 
+    Screen: React.createClass
+      getInitialState: ->
+        show: false
+      render: ->
+        <div className='screen'>
+          <a href="/editor/screen/#{@props.xmdm}/#{@props.data.hmdm}" target='_blank'>{@props.data.hmdm}</a>
+        </div>
+
+
+
 @OEActionList = React.createClass
   displayName: 'OEActionList'
   getInitialState: ->
-    actions: @props.actions || {}
+    actions: @props.flow.actions || {}
 
   render: ->
     <div className='OEActionList'>
@@ -156,6 +214,10 @@ OEActionModal = React.createClass
         <a className='add-action' href='javascript:;' onClick={@show_create_action_modal}>
           <i className='fa fa-plus'></i>
         </a>
+        <div className='baseinfo'>
+          <div className='number'>{@props.flow.number}</div>
+          <div className='name'>{@props.flow.name}</div>
+        </div>
       </div>
       <div className='actions-list'>
         {
@@ -166,6 +228,9 @@ OEActionModal = React.createClass
               <a className='link' href='javascript:;' onClick={@show_update_action_modal}>
                 <i className='fa fa-pencil'></i>
               </a>
+              <a className='screen' href='javascript:;' onClick={@show_screen_modal}>
+                <i className='fa fa-desktop'></i>
+              </a>
               <a className='remove' href='javascript:;' onClick={@remove_action}>
                 <i className='fa fa-times'></i>
               </a>
@@ -173,7 +238,12 @@ OEActionModal = React.createClass
         }
       </div>
       <OEActionModal ref='action_modal' submit={@submit} actions={@state.actions} />
+      <OEScreenModal ref='screen_modal' flow={@props.flow} screen_data={@props.screen_data} />
     </div>
+
+  show_screen_modal: ->
+    @refs.screen_modal.show()
+
 
   show_create_action_modal: ->
     action = 
@@ -267,21 +337,3 @@ OEActionModal = React.createClass
       jQuery(document).trigger 'editor:action-changed', actions
     .fail ->
       console.log 2
-
-
-# @OEFlowEditor = React.createClass
-#   displayName: 'OEFlowEditor'
-#   getInitialState: ->
-#     actions: @props.actions
-
-#   render: ->
-#     <div className='editor'>
-#       <OEActionList actions={@state.actions} update_url={@props.update_url} />
-#       <div className='preview'>
-#         <OEPreviewer data={actions: @state.actions} />
-#       </div>
-#     </div>
-
-#   componentDidMount: ->
-#     jQuery(document).on 'editor:action-changed', (evt, actions)=>
-#       @setState actions: actions

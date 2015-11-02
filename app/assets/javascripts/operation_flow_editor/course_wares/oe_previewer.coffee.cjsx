@@ -68,8 +68,9 @@ RoleLane = React.createClass
     <div className='front-end-course-ware'>
       <canvas></canvas>
       {
-        for role, actions of @state.graph.roles
-          <RoleLane role={role} actions={actions} key={role} />
+        for role in ['客户', '柜员']
+          if (actions = @state.graph.roles[role])?
+            <RoleLane role={role} actions={actions} key={role} />
       }
     </div>
 

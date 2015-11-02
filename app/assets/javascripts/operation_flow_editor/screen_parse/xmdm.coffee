@@ -90,3 +90,32 @@ ZJY = React.createClass
         }
       </div>
     </div>
+
+@OneScreenRender = React.createClass
+  displayName: 'XmdmRender'
+  get_screen: ->
+    for zjydata in @props.data
+      if zjydata.response_screen
+        if zjydata.response_screen.hmdm == @props.hmdm
+          return zjydata.response_screen
+
+      if zjydata.compound_screen
+        if zjydata.compound_screen.hmdm == @props.hmdm
+          return zjydata.compound_screen
+
+      if zjydata.input_screens
+        for isc in zjydata.input_screens
+          if isc.hmdm == @props.hmdm
+            return isc
+
+  render: ->
+    screen = @get_screen()
+    console.log screen
+
+    <div className='xmdm'>
+      <div className='zjys'>
+        <div className='zjy'>
+          <Screen data={screen} />
+        </div>
+      </div>
+    </div>

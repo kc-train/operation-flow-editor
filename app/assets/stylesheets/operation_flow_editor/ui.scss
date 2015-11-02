@@ -37,6 +37,23 @@ body.operation-flow-editor {
   background-color: #ddd;
   $sidebar-width: 100px;
 
+  .screen-table {
+    margin:-15px;
+    height: 300px;
+    overflow-y: auto;
+    td .screen {
+      background-color: #555;
+      border-radius: 3px;
+      display: inline-block;
+      font-size: 12px;
+      padding:0 5px;
+      margin-right: 5px;
+      a {color: white;
+        &:hover {color: #ffffda;}
+      }
+    }
+  }
+
   .sidebar {
     display: none;
     position: absolute;
@@ -125,6 +142,7 @@ body.operation-flow-editor {
       height:60px;
       left:0px;top:0;width:240px;
       background-color: #eee;
+      overflow: hidden;
 
       a.add-action {
         width:40px;height:40px;line-height:40px;
@@ -135,6 +153,21 @@ body.operation-flow-editor {
         background-color: #999;
         color: white;
         border-radius: 4px;
+      }
+
+      .baseinfo {
+        height:40px;line-height:20px;
+        position:absolute;
+        margin:10px;
+        margin-left:60px;
+        .number {
+          color: mix(yellow, red, 60%);
+          font-weight: bold;
+        }
+        .name {
+          height:20px;line-height:20px;
+          overflow:hidden;
+        }
       }
     }
 
@@ -162,7 +195,7 @@ body.operation-flow-editor {
         &[data-role='柜员'] {background-color: #d7f1fd;}
         &[data-role='客户'] {background-color: #edfdb5;}
 
-        a.link, a.remove {
+        a.link, a.remove, a.screen {
           position: absolute;
           width: 20px; height: 20px; line-height: 20px;
           top:3px;right:3px;
@@ -182,6 +215,10 @@ body.operation-flow-editor {
 
         a.link {
           background-color: grayscale(#E54028);
+          right:49px;
+        }
+        a.screen {
+          background-color: grayscale(#E54028);
           right:26px;
         }
 
@@ -195,7 +232,8 @@ body.operation-flow-editor {
           position: absolute;
           right:3px;bottom:3px;
           height:19px;line-height:19px;
-          width:43px;
+          // width:43px;
+          width: 66px;
           text-align: center;
           background-color: rgba(black, 0.1);
           font-size: 12px;

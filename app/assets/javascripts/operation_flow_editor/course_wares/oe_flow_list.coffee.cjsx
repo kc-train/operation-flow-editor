@@ -95,7 +95,7 @@ OEFlowModal = React.createClass
 
       <OEFlowModal ref='modal' submit={@submit} />
 
-      <table className='flows table table-striped table-borderd'>
+      <table className='flows table table-striped table-bordered'>
         <thead><tr>
           <th>id</th>
           <th>number</th>

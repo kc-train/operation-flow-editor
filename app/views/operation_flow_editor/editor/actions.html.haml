@@ -1,5 +1,4 @@
 .page-actions
-  / = react_component 'OEFlowEditor', {actions: @actions, update_url: update_actions_path}
-  = react_component 'OEActionList', {actions: @actions, update_url: update_actions_path}
+  = react_component 'OEActionList', {flow: @flow, update_url: update_actions_path, screen_data: @screen_data}
   .preview
     = react_component 'OEPreviewer', {data: {actions: @actions}}
