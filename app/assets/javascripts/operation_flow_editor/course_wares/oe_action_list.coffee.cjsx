@@ -147,17 +147,32 @@ OEActionModal = React.createClass
 
 OEScreenModal = React.createClass
   render: ->
-    <BSModal.FormModal ref='modal' title="关联屏幕 - 代码：#{@props.flow.number}" bs_size='lg'>
+    <BSModal.FormModal ref='modal' title="关联屏幕 - 代码：#{@props.flow.number}" bs_size='lg' submit={@submit}>
       <div className='screen-table'>
-        <ScreensTable data={@props.screen_data} xmdm={@props.flow.number} />
+        <ScreensTable ref='table' data={@props.screen_data} xmdm={@props.flow.number} />
       </div>
     </BSModal.FormModal>
 
   show: ->
     @refs.modal.show()
 
+  hide: ->
+    @refs.modal.hide()
+
+  submit: ->
+    hmdms = @refs.table.state.linked_hmdms
+    @state.action.linked_screen_ids = hmdms
+
+    @refs.modal.setState saving: true
+    @props.handle.save_actions @props.handle.state.actions
+
+
+
 ScreensTable = React.createClass
   displayName: 'ScreensTable'
+  getInitialState: ->
+    linked_hmdms: []
+
   render: ->
     <table className='table table-striped table-bordered'>
       <thead><tr>
@@ -172,19 +187,22 @@ ScreensTable = React.createClass
             <td>
             {
               for screen in ldjy.input_screens || []
-                <ScreensTable.Screen key={screen.hmdm} data={screen} xmdm={@props.xmdm} />
+                checked = @state.linked_hmdms.indexOf(screen.hmdm) > -1 
+                <ScreensTable.Screen checked={checked} key={screen.hmdm} data={screen} xmdm={@props.xmdm} on_click={@on_click} />
             }
             </td>
             <td>
             {
               if ldjy.response_screen?
-                <ScreensTable.Screen data={ldjy.response_screen} xmdm={@props.xmdm} />
+                checked = @state.linked_hmdms.indexOf(ldjy.response_screen.hmdm) > -1 
+                <ScreensTable.Screen checked={checked} data={ldjy.response_screen} xmdm={@props.xmdm} on_click={@on_click} />
             }
             </td>
             <td>
             {
               if ldjy.compound_screen
-                <ScreensTable.Screen data={ldjy.compound_screen} xmdm={@props.xmdm} />
+                checked = @state.linked_hmdms.indexOf(ldjy.compound_screen.hmdm) > -1 
+                <ScreensTable.Screen checked={checked} data={ldjy.compound_screen} xmdm={@props.xmdm} on_click={@on_click} />
             }
             </td>
           </tr>
@@ -192,13 +210,30 @@ ScreensTable = React.createClass
       </tbody>
     </table>
 
+  on_click: (evt)->
+    $screen = jQuery(evt.target).closest('.screen')
+    hmdm = $screen.data('hmdm') + ""
+    linked_hmdms = @state.linked_hmdms
+    if $screen.hasClass('checked')
+      linked_hmdms = linked_hmdms.filter (x)->
+        x != hmdm
+    else
+      linked_hmdms.push hmdm
+
+    @setState linked_hmdms: linked_hmdms
+
   statics: 
     Screen: React.createClass
       getInitialState: ->
         show: false
       render: ->
-        <div className='screen'>
+        klass = if @props.checked then 'screen checked' else 'screen'
+
+        <div className={klass} data-hmdm={@props.data.hmdm}>
           <a href="/editor/screen/#{@props.xmdm}/#{@props.data.hmdm}" target='_blank'>{@props.data.hmdm}</a>
+          <div className='cb' onClick={@props.on_click}>
+            <i className='fa fa-check' />
+          </div>
         </div>
 
 
@@ -238,10 +273,20 @@ ScreensTable = React.createClass
         }
       </div>
       <OEActionModal ref='action_modal' submit={@submit} actions={@state.actions} />
-      <OEScreenModal ref='screen_modal' flow={@props.flow} screen_data={@props.screen_data} />
+      <OEScreenModal ref='screen_modal' flow={@props.flow} screen_data={@props.screen_data} handle={@} />
     </div>
 
-  show_screen_modal: ->
+  show_screen_modal: (evt)->
+    action_id = jQuery(evt.target).closest('.action').data('id')
+
+    action = @state.actions[action_id]
+    @refs.screen_modal.setState
+      action: action
+    @refs.screen_modal.refs.table.setState
+      linked_hmdms: action.linked_screen_ids || []
+    @refs.screen_modal.refs.modal.setState
+      saving: false
+
     @refs.screen_modal.show()
 
 
@@ -299,6 +344,9 @@ ScreensTable = React.createClass
   hide_action_modal: ->
     @refs.action_modal.hide()
 
+  hide_screen_modal: ->
+    @refs.screen_modal.hide()
+
   submit: ->
     action = @refs.action_modal.get_action_data()
     actions = @state.actions
@@ -333,6 +381,7 @@ ScreensTable = React.createClass
         actions: actions
     .done (res)=>
       @hide_action_modal()
+      @hide_screen_modal()
       @setState actions: actions
       jQuery(document).trigger 'editor:action-changed', actions
     .fail ->

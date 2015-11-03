@@ -45,14 +45,37 @@ body.operation-flow-editor {
     height: 300px;
     overflow-y: auto;
     td .screen {
-      background-color: #555;
+      background-color: #ddd;
       border-radius: 3px;
       display: inline-block;
       font-size: 12px;
       padding:0 5px;
       margin-right: 5px;
-      a {color: white;
-        &:hover {color: #ffffda;}
+      height: 19px;line-height:19px;
+
+      a {
+        color: #333;
+      }
+      .cb {
+        float: right;
+        width: 15px;
+        height: 15px;
+        border:solid 2px #666;
+        border-radius: 2px;
+        margin-top: 2px;
+        margin-left: 5px;
+        margin-right: -2px;
+        background-color: rgba(white, 0.5);
+        cursor: pointer;
+        i {opacity: 0;display:block;color:white;}
+      }
+      &.checked {
+        background-color: #2A70E8;
+        a {color: white;}
+        .cb {
+          border-color: rgba(white, 0.5);
+          i {opacity: 1;}
+        }
       }
     }
   }
