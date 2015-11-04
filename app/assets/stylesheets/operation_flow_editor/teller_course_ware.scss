@@ -1,0 +1,174 @@
+.teller-course-ware {
+  position: absolute;
+  top:0;left:0;right:0;bottom:0;
+
+  .sidebar {
+    position: absolute;
+    width: percentage(1/4);
+    top:0;bottom:0;right:0;
+    background-color: #eee;
+    border-left:solid 1px #ddd;
+
+    .item {
+      min-height: 51px;
+      border-top: solid 1px #ddd;
+      &:first-child {border-bottom: 0 none;}
+      padding: 15px;
+      line-height: 20px;
+
+      &.base {
+        .number {
+          font-family: 'times new roman';
+          font-size: 20px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+      }
+
+      &.roles, &.complex {
+        label {float: left;margin:0;line-height:30px;}
+        .role {
+          position: relative;
+          margin-left: 80px;
+          height: 30px;line-height:30px;
+          margin-bottom: 10px;
+          &:last-child {margin-bottom: 0;}
+          &.teller {
+            &:before {
+              content: "";
+              display: block;
+              width: 30px;height:30px;
+              border-radius:100px;
+              background: url(http://i.teamkn.com/i/DtEA0wEP.png);
+              background-size: cover;
+              float: left;
+              margin-right: 10px;
+              border: solid 1px #ddd;
+            }
+          }
+          &.customer {
+            &:before {
+              content: "";
+              display: block;
+              width: 30px;height:30px;
+              border-radius:100px;
+              background: url(http://i.teamkn.com/i/UuDexXFr.png);
+              background-size: cover;
+              float: left;
+              margin-right: 10px;
+              border: solid 1px #ddd;
+            }
+          }
+        }
+        .c {
+          margin-left: 80px;
+          width: 30px;height:30px;
+          color: white;
+          line-height: 30px;
+          text-align: center;
+          border-radius:100px;
+          &.low {
+            background-color: #44B2F5;
+          }
+        }
+      }
+      &.desc {
+        label {display: block;margin-bottom:10px;}
+      }
+
+      &.qn {
+        padding: 0;
+        position: absolute;
+        bottom: 100px;
+        left:0;right:0;
+        height:50px;
+        background-color: #f7f7f7;
+        .ibtn {
+          float:left;
+          width:50%;
+          height:50px;
+          border-right: solid 1px #ddd;
+          &:last-child {border-right: 0 none;}
+          text-align: center;
+          line-height: 50px;
+          font-size: 25px;
+          color: #333;
+          &:hover {
+            background-color: #44B2F5;
+            color: white;
+          }
+        }
+      }
+      &.play {
+        position: absolute;
+        bottom: 0;left:0;right:0;
+        height: 100px;
+        padding: 0;
+        background-color: #f7f7f7;
+
+        a.play-btn, a.pause-btn {
+          position: absolute;
+          top:0;left:0;right:0;bottom:0;
+          line-height: 100px;
+          text-align: center;
+          font-size: 50px;
+          color: #333;
+          &:hover {
+            background-color: #44B2F5;
+            color: white;
+          }
+        }
+
+        a.pause-btn {display:none;}
+      }
+    }
+  }
+
+  .paper {
+    background-color: #FFF;
+    position: absolute;
+    top:0;bottom:0;left:0;
+    width:percentage(3/4);
+
+    .front-end-course-ware {
+      position: absolute;
+      top:0;left:0;right:0;bottom:0;
+      overflow-y: scroll;
+      overflow-x: hidden;
+
+      .has-screen {
+        position: absolute;
+        background-color: rgba(black, 0.4);
+        right: 0px; bottom: 0px;
+        // border-radius: 3px;
+        border-radius: 4px 0 0 0;
+        color: white;
+        padding: 0 5px;
+        height:20px;line-height:20px;
+      }
+
+      .btn-primary {
+        display: none;
+      }
+
+      .modal-header {
+        padding: 0 15px;
+      }
+
+      .ofc-teller-screen {
+        height: 480px;
+        margin-left: 215px;
+      }
+
+      .screen-desc {
+        width: 200px;
+        min-height: 480px;
+        background-color: #ffffda;
+        float: left;
+        padding: 15px;
+        font-size: 12px;
+        border:0 none;
+      }
+    }
+  }
+}

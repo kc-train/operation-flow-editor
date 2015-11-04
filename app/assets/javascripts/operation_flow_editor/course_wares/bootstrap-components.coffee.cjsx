@@ -60,6 +60,7 @@
       getInitialState: ->
         show: false
         saving: false
+
       render: ->
         <BSModal show={@state.show} bs_size={@props.bs_size}>
           <BSModal.Header>

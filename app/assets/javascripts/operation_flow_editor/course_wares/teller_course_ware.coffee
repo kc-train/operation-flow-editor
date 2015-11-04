@@ -1,0 +1,366 @@
+@TellerCourseWare = React.createClass
+  render: ->
+    window.screens = @props.data.screens
+
+    <div className='teller-course-ware'>
+      <TellerCourseWare.Panel data={@actioninfo()} />
+      <TellerCourseWare.Sidebar data={@baseinfo()} />
+    </div>
+
+  baseinfo: ->
+    @props.data.baseinfo || {}
+
+  actioninfo: ->
+    @props.data.actioninfo || {}
+
+  statics:
+    Sidebar: React.createClass
+      render: ->
+        data = @props.data
+
+        <div className='sidebar'>
+          <div className='item base'>
+            <div className='number'>{data.number}</div>
+            <div className='name'>{data.name}</div>
+          </div>
+          <div className='item roles'>
+            <label>参与角色</label>
+            <div className='role teller'>柜员</div>
+            <div className='role customer'>客户</div>
+          </div>
+          <div className='item complex'>
+            <label>复杂度</label>
+            <div className='c low'>低</div>
+          </div>
+          <div className='item desc'>
+            <label>交易概述</label>
+            {data.desc}
+          </div>
+          <div className='item qn'>
+            <a className='ibtn question-btn' href='javascript:;'>
+              <i className='fa fa-question-circle' />
+            </a>
+            <a className='ibtn note-btn' href='javascript:;'>
+              <i className='fa fa-pencil-square' />
+            </a>
+          </div>
+          <div className='item play'>
+            <a className='ibtn play-btn' href='javascript:;'>
+              <i className='fa fa-play' />
+            </a>
+            <a className='ibtn pause-btn' href='javascript:;'>
+              <i className='fa fa-pause' />
+            </a>
+          </div>
+        </div>
+
+    Panel: React.createClass
+      render: ->
+        <div className='paper'>
+          <OEP data={@props.data} />
+        </div>
+
+
+
+# ----------------
+
+###
+  FrontEndCourseWare 前端课件
+    RoleLane 角色泳道
+      ActionNode 操作步骤节点
+      ActionNode
+    RoleLane 
+###
+
+ActionNode = React.createClass
+  displayName: 'ActionNode'
+  render: ->
+    action = @props.action
+    pos = action.css_pos()
+    klass = ['action-node']
+    klass.push ['start'] if action.is_start()
+    klass.push ['end'] if action.is_end()
+
+    <div>
+    <div onClick={@open_screen_modal} className={klass.join(' ')} style={{left: "#{pos.left}px", top: "#{pos.top}px", width: "180px", 'borderRadius': '0 10px 0 10px'}}>
+      <div className='name'>{@props.action.name}</div>
+      {
+        if action.screen_ids.length
+          <div className='has-screen'>屏幕 {action.screen_ids.length}</div>
+      }
+    </div>
+      {
+        if action.screen_ids.length
+          sid = action.screen_ids[0]
+
+          screen_data = (window.screens.filter (x)->
+            x.hmdm == sid)[0]
+
+          if sid + '' == '1100001'
+            desc = '把柜员号输入编辑框'
+
+          if sid + '' == '1101018'
+            desc = """
+            【 关键字段说明 】
+            ● 柜员号：所维护柜员号；
+            ● 姓名：柜员姓名；
+            ● 英文名：柜员英文名称；
+            ● 身份证号：柜员身份证号；
+            ● 柜员级别：一系列可选择的柜员级别
+            ● 柜员类别：柜员类别
+            ● 柜员现金尾箱限额：柜员所持现金限额，超额在碰库和领用尾箱时提示。
+            ● 柜员验证方式：柜员需验证时的验证方式；
+            0 - 动态密码：采用动态密码器验证；
+            1 - 指纹仪：采指纹验证。
+            """
+
+          <BSModal.FormModal ref='modal' title='操作说明' bs_size='lg' >
+            <pre className='screen-desc'>{desc}</pre>
+            <OFCTellerScreen data={screen_data} />
+          </BSModal.FormModal>
+      }
+    </div>
+
+  open_screen_modal: ->
+    if @props.action.screen_ids.length
+      @refs.modal.show()
+
+
+RoleLane = React.createClass
+  displayName: 'RoleLane'
+  render: ->
+    @bottom = 0
+    @right = 0
+
+    <div className='role-lane' data-role={@props.role}>
+      <div className='lane-header'>角色：{@props.role}</div>
+      <div className='lane-nodes' ref='nodes_panel'>
+        {
+          for id, action of @props.actions
+            css_pos = action.css_pos()
+            @bottom = Math.max @bottom, css_pos.bottom
+            @right = Math.max @right, css_pos.right
+
+            <ActionNode action={action} key={action.id} />
+        }
+      </div>
+    </div>
+
+  componentDidMount: ->
+    @update()
+
+  componentDidUpdate: ->
+    @update()
+
+  update: ->
+    # 修正 role panel 的宽高
+    height = @bottom + 30
+    width = @right + 30
+    $panel = jQuery React.findDOMNode @refs.nodes_panel
+    $panel.css
+      width: width
+      height: height
+
+
+OEP = React.createClass
+  displayName: 'OEPreviewer'
+  getInitialState: ->
+    data: @props.data
+    # graph: new OEActionsGraph @props.data
+
+  render: ->
+    @state.graph = new OEActionsGraph @state.data
+
+    <div className='front-end-course-ware'>
+      <canvas></canvas>
+      {
+        for role in ['客户', '柜员']
+          if (actions = @state.graph.roles[role])?
+            <RoleLane role={role} actions={actions} key={role} />
+      }
+    </div>
+
+  componentDidMount: ->
+    jQuery(document).on 'editor:action-changed', (evt, actions)=>
+      data = {actions: actions}
+      @setState data: data
+
+    @change_arrows()
+
+  componentDidUpdate: ->
+    @change_arrows()
+
+  change_arrows: ->
+    # 画动态箭头
+    role_pos = {}
+    for role, actions of @state.graph.roles
+      $lane = jQuery(".role-lane[data-role=#{role}] .lane-nodes")
+      role_pos[role] = $lane.position()
+
+    @state.graph.draw_animate_arrow(role_pos)
+
+
+
+class OEActionsGraph
+  constructor: (raw_data)->
+    @roles = {}
+    @actions = {}
+
+    # 第一次遍历，实例化 action 对象
+    # 分角色提取 action 集合
+    for id, _action of raw_data.actions
+      action = new OEAction _action
+      role = action.role
+      @roles[role] ||= {}
+      @roles[role][action.id] = action
+      @actions[id] = action
+
+    # 第二次遍历，给每个 action 对象的前置后续操作赋值
+    for id, action of @actions
+      for post_action_id in action.post_action_ids
+        post_action = @actions[post_action_id]
+        action.post_actions[post_action.id] = post_action
+        post_action.pre_actions[action.id] = action
+
+    # 第三次遍历，划分子连通图
+    @sub_graphs = []
+    for id, action of @actions
+      sub_graph = new OEActionsSubGraph
+      @_r_sub_graph action, sub_graph
+      @sub_graphs.push sub_graph if not sub_graph.is_empty()
+
+    # 分别遍历各个子图
+    # 计算各个节点深度值 (deep)
+    # 和偏移值 (offset)
+    offset_deep = 0
+    for sub_graph in @sub_graphs
+      sub_graph.offset_deep = offset_deep
+      sub_graph.compute()
+      offset_deep = offset_deep + sub_graph.max_deep + 1
+
+  _r_sub_graph: (action, sub_graph)->
+    return if action.sub_graph?
+    action.sub_graph = sub_graph
+    sub_graph.add(action)
+    for id, pre_action of action.pre_actions
+      @_r_sub_graph pre_action, action.sub_graph
+    for id, post_action of action.post_actions
+      @_r_sub_graph post_action, action.sub_graph
+
+  draw_animate_arrow: (role_pos)->
+    @arrow_offset = 0 if not @arrow_offset?
+    requestAnimationFrame =>
+      @draw_arrow role_pos
+      @arrow_offset += 0.5
+      @draw_animate_arrow role_pos
+
+  draw_arrow: (role_pos)->
+    $cwel = jQuery('.front-end-course-ware')
+    height = $cwel.height() - 50
+    width = $cwel.width()
+
+    if not @curve_arrow?
+      $canvas = $cwel.find('canvas')
+        .attr 'width', width
+        .attr 'height', height
+      @curve_arrow = new CurveArrow $canvas[0]
+
+    @curve_arrow.clear()
+
+    for id, action of @actions
+      if action.is_start()
+        @_r_arrow action, role_pos
+
+  _r_arrow: (action, role_pos)->
+    # 画箭头
+    for id, post_action of action.post_actions
+      x0 = action.css_pos().left + 90
+      y0 = action.css_pos().top + 25
+      x1 = post_action.css_pos().left + 90
+      y1 = post_action.css_pos().top + 25
+
+      action_offset = role_pos[action.role]
+      post_action_offset = role_pos[post_action.role]
+
+      x0 += action_offset.left
+      x1 += post_action_offset.left
+
+      @curve_arrow.draw x0, y0, x1, y1, '#999999', @arrow_offset
+      @_r_arrow post_action, role_pos
+
+
+
+class OEActionsSubGraph
+  constructor: ->
+    @actions = {}
+    @offset_deep = 0
+    @max_deep = 0
+
+  add: (action)->
+    @actions[action.id] = action
+
+  is_empty: ->
+    Object.keys(@actions).length is 0
+
+  compute: ->
+    @deeps = {}
+    for id, action of @actions
+      if action.is_start()
+        @_r action, 0
+
+    for role, role_deeps of @deeps
+      for deep, actions of role_deeps
+        idx = 0
+        for id, action of actions
+          action.offset = idx
+          idx += 1
+
+  _r: (action, deep)->
+    deep_role = @deeps[action.role] ||= {}
+
+    if not action.deep?
+      action.deep = deep
+      deep_role[deep] ||= {}
+      deep_role[deep][action.id] = action
+
+    if deep > action.deep
+      delete deep_role[action.deep][action.id]
+      action.deep = deep
+      deep_role[deep] ||= {}
+      deep_role[deep][action.id] = action
+
+    @max_deep = action.deep if action.deep > @max_deep
+    for id, post_action of action.post_actions
+      @_r post_action, deep + 1
+
+
+
+class OEAction
+  constructor: (_action)->
+    @id = _action.id
+    @role = _action.role
+    @name = _action.name
+    @post_action_ids = _action.post_action_ids || []
+    @post_actions = {}
+    @pre_actions = {}
+    @screen_ids = _action.linked_screen_ids || []
+
+    @deep = null
+    @offset = 0
+
+  is_start: ->
+    Object.keys(@pre_actions).length is 0
+
+  is_end: ->
+    Object.keys(@post_actions).length is 0
+
+  css_pos: ->
+    top = 30 + (@deep + @sub_graph.offset_deep) * (50 + 30)
+    bottom = top + 50
+    left = 30 + @offset * (180 + 30)
+    right = left + 180
+
+    top: top
+    left: left
+    bottom: bottom
+    right: right

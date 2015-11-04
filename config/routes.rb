@@ -15,4 +15,6 @@ OperationFlowEditor::Engine.routes.draw do
   get '/xmdm/:xmdm', to: 'home#xmdm'
 
   get '/progress', to: 'home#progress'
+
+  get '/cw/:xmdm', to: 'course_ware#show'
 end
