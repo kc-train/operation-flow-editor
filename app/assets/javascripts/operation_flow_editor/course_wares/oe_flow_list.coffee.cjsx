@@ -35,6 +35,8 @@ OEFlowModal = React.createClass
             <option value='delegate_ops'>代理业务操作训练</option>
             <option value='pay_and_settle_ops'>支付结算柜台处理训练</option>
             <option value='day_end_ops'>日终处理训练</option>
+            <option value='public_ops'>公共业务</option>
+            <option value='stock_ops'>股金业务</option>
           </select>
         </div>
         {
@@ -143,6 +145,8 @@ OEFlowModal = React.createClass
                 delegate_ops: '代理业务操作训练'
                 pay_and_settle_ops: '支付结算柜台处理训练'
                 day_end_ops: '日终处理训练'
+                public_ops: '公共业务'
+                stock_ops: '股金业务'
               }[business_kind]
 
               <tr data-id={flow.id} key={flow.id} className='flow'>
