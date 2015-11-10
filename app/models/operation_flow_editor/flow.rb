@@ -7,6 +7,7 @@ module OperationFlowEditor
     field :name
     field :actions
     field :gtd_status # init half almost done
+    field :business_kind
 
     default_scope ->{ order(:id.desc) }
 
@@ -32,6 +33,7 @@ module OperationFlowEditor
         id: id.to_s,
         number: number,
         name: name,
+        business_kind: business_kind,
         gtd_status: gtd_status,
         actions: {
           total: actions_count,

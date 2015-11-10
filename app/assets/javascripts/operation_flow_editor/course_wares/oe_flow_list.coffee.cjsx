@@ -24,6 +24,21 @@ OEFlowModal = React.createClass
           <label>名称</label>
           <input className='form-control' type='text' placeholder='名称' ref='name_inputer' value={@state.flow.name} onChange={@name_changed} />
         </div>
+        <div className='form-group'>
+          <label>业务归类</label>
+          <select className='form-control' ref='business_kind_inputer' value={@state.flow.business_kind} onChange={@business_kind_changed} >
+            <option value='none'>未分类</option>
+            <option value='day_begin_ops'>日初处理训练</option>
+            <option value='saving_ops'>储蓄业务操作训练</option>
+            <option value='personal_loan_ops'>个人贷款业务柜台处理训练</option>
+            <option value='company_saving_and_loan_ops'>对公存贷业务操作训练</option>
+            <option value='delegate_ops'>代理业务操作训练</option>
+            <option value='pay_and_settle_ops'>支付结算柜台处理训练</option>
+            <option value='day_end_ops'>日终处理训练</option>
+            <option value='public_ops'>公共业务</option>
+            <option value='stock_ops'>股金业务</option>
+          </select>
+        </div>
         {
           if @state.flow.id?
             <div className='form-group'>
@@ -75,6 +90,11 @@ OEFlowModal = React.createClass
     flow.gtd_status = evt.target.value
     @setState flow: flow
 
+  business_kind_changed: (evt)->
+    flow = @state.flow
+    flow.business_kind = evt.target.value
+    @setState flow: flow
+
 @OEFlowList = React.createClass
   # props
   #   show
@@ -97,12 +117,12 @@ OEFlowModal = React.createClass
 
       <table className='flows table table-striped table-bordered'>
         <thead><tr>
-          <th>id</th>
-          <th>number</th>
-          <th>name</th>
-          <th>stat</th>
-          <th>GTD status</th>
-          <th>ops</th>
+          <th>编号</th>
+          <th>名称</th>
+          <th>统计</th>
+          <th>业务归类</th>
+          <th>制作状态</th>
+          <th>操作</th>
         </tr></thead>
         <tbody>
           {
@@ -115,11 +135,25 @@ OEFlowModal = React.createClass
                 done: '做完了'
               }[gtd_status]
 
+              business_kind = flow.business_kind || 'none'
+              kind_str = {
+                none: '未分类'
+                day_begin_ops: '日初处理训练'
+                saving_ops: '储蓄业务操作训练'
+                personal_loan_ops: '个人贷款业务柜台处理训练'
+                company_saving_and_loan_ops: '对公存贷业务操作训练'
+                delegate_ops: '代理业务操作训练'
+                pay_and_settle_ops: '支付结算柜台处理训练'
+                day_end_ops: '日终处理训练'
+                public_ops: '公共业务'
+                stock_ops: '股金业务'
+              }[business_kind]
+
               <tr data-id={flow.id} key={flow.id} className='flow'>
-                <td>{flow.id}</td>
                 <td>{flow.number}</td>
                 <td>{flow.name}</td>
                 <td>节点:{flow.actions.total} 柜员:{flow.actions.gy_count} 客户:{flow.actions.kh_count}</td>
+                <td>{kind_str}</td>
                 <td>{status_str}</td>
                 <td>
                   <div className='btn-group'>
@@ -164,6 +198,7 @@ OEFlowModal = React.createClass
     number = @refs.modal.state.flow.number || ''
     name = @refs.modal.state.flow.name || ''
     gtd_status = @refs.modal.state.flow.gtd_status || 'init'
+    business_kind = @refs.modal.state.flow.business_kind || 'none'
 
     @refs.modal.setState saving: true
 
@@ -175,6 +210,7 @@ OEFlowModal = React.createClass
           flow:
             number: number
             name: name
+            business_kind: business_kind
       .done (res)=>
         flows = @state.flows
         flows = [res].concat flows
@@ -192,6 +228,7 @@ OEFlowModal = React.createClass
             number: number
             name: name
             gtd_status: gtd_status
+            business_kind: business_kind
       .done (res)=>
         flows = @state.flows
         for flow in flows
@@ -199,6 +236,7 @@ OEFlowModal = React.createClass
             flow.name = name
             flow.number = number
             flow.gtd_status = gtd_status
+            flow.business_kind = business_kind
         @setState flows: flows
         @refs.modal.close_modal()
       .fail ->
