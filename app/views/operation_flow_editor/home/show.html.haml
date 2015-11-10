@@ -1,0 +1,22 @@
+%h3 内容展示 - 示例课件
+:ruby
+  data = [
+    {number: 121200, name: '个人活期存款存入'},
+    {number: 121300, name: '个人活期存款支取'},
+    {number: 122100, name: '定期存款开户'},
+    {number: 131002, name: '贷款发放'},
+    {number: 132003, name: '贷款利率调整'},
+    {number: 136006, name: '贷款交易明细查询'},
+    {number: 137025, name: '五万元小额农贷清单'},
+    {number: 173130, name: '自助转帐签约/解约'},
+    {number: 280020, name: '增资扩股'},
+    {number: 280040, name: '股权变更'},
+  ]
+
+  data.each do |d|
+    if OperationFlowEditor::Flow.where(number: d[:number].to_s).first
+      d[:is_published] = true
+    end
+  end
+
+= react_component 'ExampleCourseWares', data: data

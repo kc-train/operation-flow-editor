@@ -10,6 +10,46 @@
     = javascript_include_tag 'operation_flow_editor/application'
 
   %body.app
+    %nav.navbar.navbar-default
+      .container
+        .navbar-header
+          %a.navbar-brand{href: root_path}
+            %i.glyphicon.glyphicon-home
+            %span 课件制作工具
+        .collapse.navbar-collapse
+          %ul.nav.navbar-nav
+            %li.dropdown
+              %a.dropdown-toggle{href: 'javascript:;', data: {toggle: 'dropdown'}}
+                %i.fa.fa-pencil
+                %span 内容制作
+                %span.caret
+              %ul.dropdown-menu
+                %li
+                  %a{href: root_path} 流程清单
+                %li
+                  %a{href: 'javascript:;'} 屏幕模拟
+
+            %li.dropdown
+              %a.dropdown-toggle{href: 'javascript:;', data: {toggle: 'dropdown'}}
+                %i.glyphicon.glyphicon-grain
+                %span 内容组织
+                %span.caret
+              %ul.dropdown-menu
+                %li
+                  %a{href: progress_path} 进度汇总
+                %li
+                  %a{href: show_path} 内容展示
+
+            %li.dropdown
+              %a.dropdown-toggle{href: 'javascript:;', data: {toggle: 'dropdown'}}
+                %i.glyphicon.glyphicon-grain
+                %span 其他杂项
+                %span.caret
+              %ul.dropdown-menu
+                %li
+                  %a{href: query_rule_path} 查询规则
+
+
     .page-content.container
       .row
         .col-sm-12
