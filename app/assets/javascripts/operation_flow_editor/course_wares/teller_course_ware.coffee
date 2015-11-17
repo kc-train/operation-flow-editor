@@ -34,7 +34,9 @@
           </div>
           <div className='item desc'>
             <label>交易概述</label>
-            {data.desc}
+            <pre>{data.descs[data.number]}</pre>
+            <label>关键概念</label>
+            <pre>{data.gainian[data.number]}</pre>
           </div>
           <div className='item qn'>
             <a className='ibtn question-btn' href='javascript:;'>

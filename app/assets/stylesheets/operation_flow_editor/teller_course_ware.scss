@@ -185,7 +185,16 @@ body.course-ware {
         }
       }
       &.desc {
+        max-height: 400px;
+        overflow-y:auto;
         label {display: block;margin-bottom:10px;}
+        pre {
+          border:0 none;
+          padding:0;
+          margin:0;
+          font-family: arial, '微软雅黑';
+          background:none;
+        }
       }
 
       &.qn {
