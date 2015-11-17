@@ -210,7 +210,7 @@ body.operation-flow-editor {
 
       .action {
         padding:0 10px;
-        padding-right: 48px;
+        padding-right: 48px + 23px;
         font-size: 13px;
         height:50px;line-height:24px;
         background-color: $editor-action-bgc;
@@ -243,13 +243,13 @@ body.operation-flow-editor {
 
         a.link {
           background-color: grayscale(#E54028);
-          // right:49px;
-          right: 26px;
+          right:49px;
+          // right: 26px;
         }
         a.screen {
           background-color: grayscale(#E54028);
           right:26px;
-          display: none;
+          // display: none;
         }
 
         &:first-child:last-child {
@@ -263,7 +263,7 @@ body.operation-flow-editor {
           right:3px;bottom:3px;
           height:19px;line-height:19px;
           width:43px;
-          // width: 66px;
+          width: 66px;
           text-align: center;
           background-color: rgba(black, 0.1);
           font-size: 12px;

@@ -3,8 +3,8 @@
     window.screens = @props.data.screens
 
     <div className='teller-course-ware'>
-      <TellerCourseWare.Panel data={@actioninfo()} />
       <TellerCourseWare.Sidebar data={@baseinfo()} />
+      <TellerCourseWare.Panel data={@actioninfo()} />
     </div>
 
   baseinfo: ->
@@ -64,140 +64,187 @@
 
 # ----------------
 
-###
-  FrontEndCourseWare 前端课件
-    RoleLane 角色泳道
-      ActionNode 操作步骤节点
-      ActionNode
-    RoleLane 
-###
-
-ActionNode = React.createClass
-  displayName: 'ActionNode'
-  render: ->
-    action = @props.action
-    pos = action.css_pos()
-    klass = ['action-node']
-    klass.push ['start'] if action.is_start()
-    klass.push ['end'] if action.is_end()
-
-    <div>
-    <div onClick={@open_screen_modal} className={klass.join(' ')} style={{left: "#{pos.left}px", top: "#{pos.top}px", width: "180px", 'borderRadius': '0 10px 0 10px'}}>
-      <div className='name'>{@props.action.name}</div>
-      {
-        if action.screen_ids.length
-          <div className='has-screen'>屏幕 {action.screen_ids.length}</div>
-      }
-    </div>
-      {
-        if action.screen_ids.length
-          sid = action.screen_ids[0]
-
-          screen_data = (window.screens.filter (x)->
-            x.hmdm == sid)[0]
-
-          if sid + '' == '1100001'
-            desc = '把柜员号输入编辑框'
-
-          if sid + '' == '1101018'
-            desc = """
-            【 关键字段说明 】
-            ● 柜员号：所维护柜员号；
-            ● 姓名：柜员姓名；
-            ● 英文名：柜员英文名称；
-            ● 身份证号：柜员身份证号；
-            ● 柜员级别：一系列可选择的柜员级别
-            ● 柜员类别：柜员类别
-            ● 柜员现金尾箱限额：柜员所持现金限额，超额在碰库和领用尾箱时提示。
-            ● 柜员验证方式：柜员需验证时的验证方式；
-            0 - 动态密码：采用动态密码器验证；
-            1 - 指纹仪：采指纹验证。
-            """
-
-          <BSModal.FormModal ref='modal' title='操作说明' bs_size='lg' >
-            <pre className='screen-desc'>{desc}</pre>
-            <OFCTellerScreen data={screen_data} />
-          </BSModal.FormModal>
-      }
-    </div>
-
-  open_screen_modal: ->
-    if @props.action.screen_ids.length
-      @refs.modal.show()
-
-
-RoleLane = React.createClass
-  displayName: 'RoleLane'
-  render: ->
-    @bottom = 0
-    @right = 0
-
-    <div className='role-lane' data-role={@props.role}>
-      <div className='lane-header'>角色：{@props.role}</div>
-      <div className='lane-nodes' ref='nodes_panel'>
-        {
-          for id, action of @props.actions
-            css_pos = action.css_pos()
-            @bottom = Math.max @bottom, css_pos.bottom
-            @right = Math.max @right, css_pos.right
-
-            <ActionNode action={action} key={action.id} />
-        }
-      </div>
-    </div>
-
-  componentDidMount: ->
-    @update()
-
-  componentDidUpdate: ->
-    @update()
-
-  update: ->
-    # 修正 role panel 的宽高
-    height = @bottom + 30
-    width = @right + 30
-    $panel = jQuery React.findDOMNode @refs.nodes_panel
-    $panel.css
-      width: width
-      height: height
 
 
 OEP = React.createClass
   displayName: 'OEPreviewer'
   getInitialState: ->
-    data: @props.data
-    # graph: new OEActionsGraph @props.data
+    graph: new OEActionsGraph @props.data
 
   render: ->
-    @state.graph = new OEActionsGraph @state.data
-
-    <div className='front-end-course-ware'>
-      <canvas></canvas>
-      {
-        for role in ['客户', '柜员']
-          if (actions = @state.graph.roles[role])?
-            <RoleLane role={role} actions={actions} key={role} />
-      }
+    <div className='flow-course-ware'>
+      <OEP.Header data={@state.graph} />
+      <OEP.Nodes oep={@} data={@state.graph} />
+      <OEP.TeachingDialog oep={@} ref='dialog' data={@state.graph} />
     </div>
 
   componentDidMount: ->
-    jQuery(document).on 'editor:action-changed', (evt, actions)=>
-      data = {actions: actions}
-      @setState data: data
-
     @change_arrows()
 
-  componentDidUpdate: ->
-    @change_arrows()
+    for id, action of @state.graph.actions
+      if action.is_start()
+        @focus_action action
+        break
 
   change_arrows: ->
     # 画动态箭头
     role_pos = {}
     for role, actions of @state.graph.roles
-      $lane = jQuery(".role-lane[data-role=#{role}] .lane-nodes")
+      $lane = jQuery(".role-actions[data-role=#{role}]")
       role_pos[role] = $lane.position()
 
     @state.graph.draw_animate_arrow(role_pos)
+
+  focus_action: (action)->
+    @refs.dialog.show action
+
+    jQuery('.action-node').removeClass('focus')
+    jQuery(".action-node[data-id=#{action.id}]").addClass('focus')
+
+  statics:
+    Header: React.createClass
+      displayName: 'OEP.Header'
+      render: ->
+        <div className='header'>
+          {
+            for role in ['客户', '柜员']
+              if @props.data.roles[role]?
+                <div key={role} className='role'>角色：{role}</div>
+                
+          }
+        </div>
+
+    Nodes: React.createClass
+      displayName: 'OEP.Nodes'
+      render: ->
+        <div className='nodes'>
+          <div className='nbox'>
+          <canvas className='ncanvas' />
+          {
+            for role in ['客户', '柜员']
+              if (role_actions = @props.data.roles[role])?
+                <OEP.RoleActions oep={@props.oep} key={role} role={role} data={role_actions} />
+          }
+          </div>
+        </div>
+
+    RoleActions: React.createClass
+      displayName: 'OEP.RoleActions'
+      render: ->
+        @bottom = 0
+        @right = 0
+
+        <div ref='panel' data-role={@props.role} className='role-actions'>
+          {
+            for id, action of @props.data
+              pos = action.css_pos()
+              @bottom = Math.max @bottom, pos.bottom
+              @right = Math.max @right, pos.right
+
+              <OEP.Action oep={@props.oep} key={id} data={action} />
+          }
+        </div>
+
+      componentDidMount: ->
+        @update_size()
+
+      componentDidUpdate: ->
+        @update_size()
+
+      update_size: ->
+        # 设置宽高
+        $panel = jQuery React.findDOMNode @refs.panel
+        $panel.css
+          width: @right + OEAction.CSS_GAP
+          height: @bottom + OEAction.CSS_GAP
+
+
+    Action: React.createClass
+      displayName: 'OEP.Action'
+      render: ->
+        action = @props.data
+        pos = action.css_pos()
+        style = 
+          left: "#{pos.left}px"
+          top: "#{pos.top}px"
+          width: "#{OEAction.CSS_WIDTH}px"
+          height: "#{OEAction.CSS_HEIGHT}px"
+        klass = ['action-node']
+
+        <div className={klass.join(' ')} data-role={action.role} data-deep={action.deep} style={style} data-id={action.id} onClick={@do_click}>
+          <div className='box'>
+            <div className='name'>{action.name}</div>
+            {
+              if action.screen_ids.length
+                <div className='has-screen'>
+                  <i className='fa fa-desktop' />
+                  <span className='count'>{action.screen_ids.length}</span>
+                </div>
+            }
+          </div>
+        </div>
+
+      do_click: (evt)->
+        @props.oep.focus_action @props.data
+
+
+    TeachingDialog: React.createClass
+      getInitialState: ->
+        action: {}
+
+      render: ->
+        action = @state.action
+
+        if Object.keys(action).length
+          @prev_keys = Object.keys(@state.action.pre_actions)
+          @next_keys = Object.keys(@state.action.post_actions)
+
+          @has_prev = @prev_keys.length
+          @has_next = @next_keys.length
+
+        <div className='teaching-dialog'>
+          <div ref='box'>
+            <div className='action-name'>
+              <span className='ct'>{action.name}</span>
+            </div>
+            {
+              if action.screen_ids?.length
+                <div className='has-screen'>
+                  <div className='desc'>这个步骤需要通过柜员机屏幕进行操作</div>
+                  <a className='btn btn-success btn-sm'>
+                    <i className='fa fa-desktop' />
+                    <span>学习屏幕操作</span>
+                  </a>
+                </div>
+            }
+
+            <div className='nav'>
+              <a href='javascript:;' onClick={@focus_prev}><i className='fa fa-chevron-left'/>上一步</a>
+              <a href='javascript:;' onClick={@focus_next}>下一步<i className='fa fa-chevron-right'/></a>
+            </div>
+          </div>
+        </div>
+
+      show: (action)->
+        $box = jQuery React.findDOMNode @refs.box
+        $box.find('.ct').fadeOut 100, =>
+          @setState action: action
+
+      componentDidUpdate: ->
+        $box = jQuery React.findDOMNode @refs.box
+        $box.find('.ct').fadeIn(100)
+
+      focus_prev: ->
+        if @has_prev
+          @props.oep.focus_action @state.action.pre_actions[@prev_keys[0]]
+
+      focus_next: ->
+        if @has_next
+          @props.oep.focus_action @state.action.post_actions[@next_keys[0]]
+
+# -------------------------------------
+# 以下是非 ReactJS 的类，用于数据解析
+# 和课程编辑器中的类应该复用，将来重构
 
 
 
@@ -209,7 +256,7 @@ class OEActionsGraph
     # 第一次遍历，实例化 action 对象
     # 分角色提取 action 集合
     for id, _action of raw_data.actions
-      action = new OEAction _action
+      action = new OEAction _action, @
       role = action.role
       @roles[role] ||= {}
       @roles[role][action.id] = action
@@ -238,6 +285,13 @@ class OEActionsGraph
       sub_graph.compute()
       offset_deep = offset_deep + sub_graph.max_deep + 1
 
+    # 课件绘制的补充需求
+    # 再次遍历所有子图，计算节点视觉深度值（vdeep）
+    # 以达到更美观紧凑的显示
+    for sub_graph in @sub_graphs
+      sub_graph.compute_vdeep()
+
+
   _r_sub_graph: (action, sub_graph)->
     return if action.sub_graph?
     action.sub_graph = sub_graph
@@ -252,18 +306,19 @@ class OEActionsGraph
     requestAnimationFrame =>
       @draw_arrow role_pos
       @arrow_offset += 0.5
+      # console.log @arrow_offset
       @draw_animate_arrow role_pos
 
   draw_arrow: (role_pos)->
-    $cwel = jQuery('.front-end-course-ware')
-    height = $cwel.height() - 50
-    width = $cwel.width()
+    $ncanvas = jQuery('canvas.ncanvas')
+    $nbox = jQuery('.nbox')
 
     if not @curve_arrow?
-      $canvas = $cwel.find('canvas')
-        .attr 'width', width
-        .attr 'height', height
-      @curve_arrow = new CurveArrow $canvas[0]
+      $ncanvas
+        .attr 'width', $nbox.width()
+        .attr 'height', $nbox.height()
+
+      @curve_arrow = new CurveArrow $ncanvas[0]
 
     @curve_arrow.clear()
 
@@ -287,7 +342,6 @@ class OEActionsGraph
 
       @curve_arrow.draw x0, y0, x1, y1, '#999999', @arrow_offset
       @_r_arrow post_action, role_pos
-
 
 
 class OEActionsSubGraph
@@ -333,10 +387,49 @@ class OEActionsSubGraph
     for id, post_action of action.post_actions
       @_r post_action, deep + 1
 
+  compute_vdeep: ->
+    for id, action of @actions
+      if action.is_start()
+        @_rv action
+
+  _rv: (action)->
+    @_adjust_vdeep action
+
+    for id, post_action of action.post_actions
+      @_rv post_action
+
+  _adjust_vdeep: (action)->
+    action.vdeep = action.deep
+    same_role_deep_actions = @deeps[action.role][action.deep]
+    
+    # 没有同角色的同深度节点时才需要调整
+    return if Object.keys(same_role_deep_actions).length > 1
+
+    # 有父节点时才需要调整
+    return if Object.keys(action.pre_actions).length == 0
+    
+    # 获取所有父节点的最大深度
+    max_pre_vdeep = 0
+    for id, pre_action of action.pre_actions
+      max_pre_vdeep = Math.max max_pre_vdeep, pre_action.vdeep
+
+    # 获取同角色节点的小于当前节点的最大深度
+    _actions = (_action for id, _action of @actions).filter (x)->
+      x.vdeep < action.deep and x.role == action.role
+    max_same_role_vdeep = -1
+    for _action in _actions
+      max_same_role_vdeep = Math.max max_same_role_vdeep, _action.vdeep
+
+    # console.log action.name, max_pre_vdeep, max_same_role_vdeep
+    action.vdeep = Math.max max_pre_vdeep, max_same_role_vdeep + 1
 
 
 class OEAction
-  constructor: (_action)->
+  @CSS_WIDTH: 180
+  @CSS_HEIGHT: 70
+  @CSS_GAP: 30
+
+  constructor: (_action, @graph)->
     @id = _action.id
     @role = _action.role
     @name = _action.name
@@ -355,10 +448,15 @@ class OEAction
     Object.keys(@post_actions).length is 0
 
   css_pos: ->
-    top = 30 + (@deep + @sub_graph.offset_deep) * (50 + 30)
-    bottom = top + 50
-    left = 30 + @offset * (180 + 30)
-    right = left + 180
+    top = 
+      OEAction.CSS_GAP + 
+      # (@deep + @sub_graph.offset_deep) * 
+      (@vdeep + @sub_graph.offset_deep) * 
+      (OEAction.CSS_HEIGHT + OEAction.CSS_GAP)
+    
+    bottom = top + OEAction.CSS_HEIGHT
+    left = OEAction.CSS_GAP + @offset * (OEAction.CSS_WIDTH + OEAction.CSS_GAP)
+    right = left + OEAction.CSS_WIDTH
 
     top: top
     left: left

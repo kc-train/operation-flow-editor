@@ -94,22 +94,37 @@
   }
 }
 
+body.course-ware {
+  background: url(http://i.teamkn.com/@/i/bro6GxK8.png);
+  background-color: #ddd;
+  overflow:hidden;
+}
+
+@keyframes focusarrow {
+  0% { transform: translate(0, 0);opacity:1; }
+  50% { transform: translate(-10px, 0);opacity:0.5; }
+  100% { transform: translate(0, 0);opacity:1; }
+}
 
 .teller-course-ware {
   position: absolute;
   top:0;left:0;right:0;bottom:0;
 
+  $sidebar-width: 290px;
+
   .sidebar {
     position: absolute;
-    width: percentage(1/4);
-    top:0;bottom:0;right:0;
-    background-color: #eee;
+    width: $sidebar-width;
+    top:0;bottom:0;left:0;
+    background-color: #F7F7F7;
     border-left:solid 1px #ddd;
+    border-right:solid 1px #ccc;
 
     .item {
       min-height: 51px;
-      border-top: solid 1px #ddd;
-      &:first-child {border-bottom: 0 none;}
+      border-top: solid 1px #fff;
+      border-bottom: solid 1px #ddd;
+      &:first-child {border-top: 0 none;}
       padding: 15px;
       line-height: 20px;
 
@@ -174,6 +189,7 @@
       }
 
       &.qn {
+        display: none;
         padding: 0;
         position: absolute;
         bottom: 100px;
@@ -197,6 +213,7 @@
         }
       }
       &.play {
+        display: none;
         position: absolute;
         bottom: 0;left:0;right:0;
         height: 100px;
@@ -222,49 +239,182 @@
   }
 
   .paper {
-    background-color: #FFF;
     position: absolute;
-    top:0;bottom:0;left:0;
-    width:percentage(3/4);
+    top:0;bottom:0;left:$sidebar-width;right:0;
 
-    .front-end-course-ware {
+    .flow-course-ware {
       position: absolute;
       top:0;left:0;right:0;bottom:0;
-      overflow-y: scroll;
-      overflow-x: hidden;
+      $header-height: 60px;
+      .header {
+        border-bottom: solid 1px #ccc;
+        background-color: #f7f7f7;
+        @include clearfix;
+        .role {
+          height:$header-height;line-height:$header-height;
+          float: left;
+          width: 240px;
+          text-align: center;
+          border-left:solid 1px white;
+          border-right:solid 1px #ddd;
+        }
+      }
 
-      .has-screen {
+      .nodes {
         position: absolute;
-        background-color: rgba(black, 0.4);
-        right: 0px; bottom: 0px;
-        // border-radius: 3px;
-        border-radius: 4px 0 0 0;
-        color: white;
-        padding: 0 5px;
-        height:20px;line-height:20px;
+        top: $header-height + 1px;
+        left:0;right:0;bottom:0;
+        overflow-y:scroll;
+        overflow-x:hidden;
+
+        .nbox {
+          float: left;
+          canvas.ncanvas {
+            position: absolute;
+            top:0;left:0;
+          }
+        }
+
+        .role-actions {
+          position: relative;
+          float: left;
+          .action-node {
+            // -webkit-filter: blur(10px);
+            transition: transform .2s ease-out;
+            cursor: pointer;
+            &:hover {
+              // transform: translate(0, -3px);
+              transform: rotate(-5deg);
+            }
+
+            &.focus {
+              &:after {
+                // content: "\f063";
+                content: "\f061";
+                font-family: FontAwesome;
+                position: absolute;
+                top:0;left:-20px;bottom:0;
+                font-size: 40px;
+                // color: #F18D05;
+                color:#FF4400;
+                height:40px;line-height:40px;
+                margin:auto;
+                animation: focusarrow 1s  infinite;
+              }
+            }
+
+            position: absolute;
+            background-color: #FFF;
+            box-shadow: 1px 1px 5px rgba(black, 0.2);
+            .box {
+              $pd: 5px;
+              position: absolute;
+              top:$pd;left:$pd;right:$pd;bottom:$pd;
+              padding: 10px;
+              overflow: hidden;
+              font-size: 13px;
+              line-height: 20px;
+            }
+            
+            &[data-role='客户'] .box{
+              background-color: lighten(#EDFDB5, 5%);
+            }
+            &[data-role='柜员'] .box{
+              background-color: lighten(#D7F1FD, 5%);
+            }
+
+            .box {
+              .name {
+                height: 40px;
+                line-height: 20px;
+                margin-right: 40px;
+                overflow:hidden;
+              }
+              .has-screen {
+                position: absolute;
+                top:0;right:0;bottom:0;width:50px;
+                text-align: center;
+                line-height: 60px;
+                font-size: 24px;
+                .count {display:none;}
+              }
+            }
+          }
+        }
       }
 
-      .btn-primary {
-        display: none;
+      .teaching-dialog {
+        position: fixed;
+        top:71px;right:30px;
+        width:480px;
+        height: 360px;
+        background-color: #FFF;
+        background-color: #F7F7F7;
+        box-shadow:1px 1px 5px rgba(0, 0, 0, 0.2);
+
+        .action-name {
+          font-size: 16px;
+          height:50px;line-height:50px;
+          padding:0 15px;
+          border-bottom:solid 1px #ddd;
+        }
+
+        .nav {
+          position: absolute;
+          left:0;right:0;bottom:0;
+          a {
+            width:50%;
+            float:left;
+            border-top:solid 1px #ddd;
+            height:50px;line-height:50px;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+            i {
+              margin:0 10px;
+            }
+            &:first-child {
+              border-right:solid 1px #ddd;
+            }
+            &:last-child {
+              border-left:solid 1px #fff;
+            }
+            &:hover {
+              background-color: #ffffda;
+              text-decoration: none;
+            }
+          }
+        }
+
+        .has-screen {
+          padding: 15px;
+          background-color: #ffffda;
+          border-bottom:dashed 1px #ddd;
+          .desc {margin-bottom: 10px;}
+          i {margin-right: 10px;}
+        }
       }
 
-      .modal-header {
-        padding: 0 15px;
-      }
+      .modal-panel {
+        .modal-header {
+          display: none;
+        }
+        .modal-content {
+          border-radius: 0;
+        }
+        .modal-footer {
+          .btn.btn-primary{display:none;}
+        }
 
-      .ofc-teller-screen {
-        height: 480px;
-        margin-left: 215px;
-      }
-
-      .screen-desc {
-        width: 200px;
-        min-height: 480px;
-        background-color: #ffffda;
-        float: left;
-        padding: 15px;
-        font-size: 12px;
-        border:0 none;
+        .screen-desc {
+          background-color: #ffffda;
+          width: 200px;
+          min-height: 400px;
+          border:0 none;
+          border-radius: 0;
+          margin:0;
+        }
       }
     }
   }

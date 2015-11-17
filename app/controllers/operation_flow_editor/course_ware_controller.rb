@@ -21,7 +21,7 @@ module OperationFlowEditor
       @data = {
         baseinfo: {
           number: number,
-          name: '柜员基本信息维护',
+          name: flow.name,
           desc: '本交易实现对柜员信息进行维护的功能'
         },
         actioninfo: {

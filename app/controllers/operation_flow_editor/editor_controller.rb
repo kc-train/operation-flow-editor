@@ -6,13 +6,13 @@ module OperationFlowEditor
       @flow = OperationFlowEditor::Flow.find(params[:flow_id])
       @actions = @flow.actions
 
-      # path = File.join __dir__, '../../..', "progress-data/export/#{@flow.number}.json"
-      # if File.exist? path
-      #   @screen_data = JSON.parse File.read path
-      # else
-      #   @screen_data = nil
-      # end
-      @screen_data = []
+      path = File.join __dir__, '../../..', "progress-data/export/#{@flow.number}.json"
+      if File.exist? path
+        @screen_data = JSON.parse File.read path
+      else
+        @screen_data = []
+      end
+      # @screen_data = []
     end
 
     def update_actions
