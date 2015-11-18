@@ -2,6 +2,118 @@ module OperationFlowEditor
   class CourseWareController < OperationFlowEditor::ApplicationController
     layout 'operation_flow_editor/course_ware'
 
+    def _get_linked_flow(id)
+      all_transactions_data = JSON.parse File.read File.join __dir__, '../../..', "progress-data/all-transactions.json"
+
+      links = {
+        '131003' => %w(
+          131002
+          131004
+          131007
+          131008
+          131010
+          131015
+          131022
+          131031
+          131032
+          131033
+        ),
+
+        '651001' => %w(
+          651002
+          651004
+          651005
+          651008
+          651012
+          651013
+          651014
+        ),
+
+        '121200' => %w(
+          121100
+          121300
+          121500
+          121400
+        ),
+        
+        '121300' => %w(
+          121100
+          121200
+          121500
+          121400
+        ),
+
+        '122100' => %w(
+          122200
+          122300
+          122400
+          122500
+        ),
+
+        '131002' => %w(
+          131003
+          131004
+          131007
+          131008
+          131010
+          131015
+          131022
+          131031
+          131032
+          131033
+        ),
+
+        '132003' => %w(
+          132002
+          132004
+          132005
+          132006
+          132007
+          132012
+          132013
+          132014
+          132016
+        ),
+
+        '136006' => %w(
+          136001
+          136002
+          136003
+          136004
+          136005
+          136007
+          136010
+          136011
+          136012
+          136013
+          136015
+          136026
+          136027
+          136028
+          136029
+          136031
+          136032
+          136033
+        ),
+
+        '137025' => %w(
+          137026
+        ),
+        
+        '173130' => %w(
+          280020
+          280040
+        )
+      }
+
+      (links[id.to_s] || []).map {|x|
+        all_transactions_data.select {|y|
+          y['id'] == x.to_s
+        }.first
+      }.compact
+    end
+
+
     def show
       number = params[:xmdm]
 
@@ -21,7 +133,8 @@ module OperationFlowEditor
       @data = {
         baseinfo: {
           number: number,
-          name: flow.name,
+          name: flow.present? ? flow.name : '',
+          linked_flows: _get_linked_flow(number),
           descs: {
 131003 => "本交易用于手工扣收贷款本息。此交易用来完成借款人归还贷款的帐务处理；同时此交易也用来归还银承、保函等其他业务由于申请人账户不足支付而由银行代垫的款项。
 
@@ -46,7 +159,7 @@ module OperationFlowEditor
           }
         },
         actioninfo: {
-          actions: flow.actions,
+          actions: flow.present? ? flow.actions : [],
           action_desc: [
 "客户向柜员提出垫款还款的要求，等待柜员做后续处理。  ",
 "如果客户在银行已有存款账户，就使用客户己有的存款户。（此存款户不能是集团二级账户、协定存款 B 户或临时户）",

@@ -42,10 +42,24 @@ body.operation-flow-editor {
   background-color: #ddd;
   $sidebar-width: 100px;
 
+  .action-node-edit {
+    .desc-area {
+      width: 500px;
+      resize: none;
+      margin-top: 15px;
+    }
+    .tab-pane.upload {
+      padding-top: 15px;
+    }
+    .tab-pane.klink {
+      padding-top: 15px;
+    }
+  }
+
   .screen-table {
-    margin:-15px;
-    height: 300px;
-    overflow-y: auto;
+    max-height:300px;
+    overflow-y:auto;
+
     td .screen {
       background-color: #ddd;
       border-radius: 3px;

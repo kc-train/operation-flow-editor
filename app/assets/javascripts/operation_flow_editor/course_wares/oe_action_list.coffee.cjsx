@@ -146,10 +146,34 @@ OEActionModal = React.createClass
 
 
 OEScreenModal = React.createClass
+  getInitialState: ->
+    action: null
   render: ->
-    <BSModal.FormModal ref='modal' title="关联屏幕 - 代码：#{@props.flow.number}" bs_size='lg' submit={@submit}>
-      <div className='screen-table'>
-        <ScreensTable ref='table' data={@props.screen_data} xmdm={@props.flow.number} />
+    <BSModal.FormModal ref='modal' title="流程节点设置 - #{@state.action?.name}" bs_size='lg' submit={@submit}>
+
+      <div className='action-node-edit'>
+        <ul className="nav nav-tabs" role="tablist">
+          <li role="presentation" className="active"><a href="#modal-screen" aria-controls="home" role="tab" data-toggle="tab">屏幕关联</a></li>
+          <li role="presentation"><a href="#modal-desc" aria-controls="profile" role="tab" data-toggle="tab">描述文本</a></li>
+          <li role="presentation"><a href="#modal-attach" aria-controls="messages" role="tab" data-toggle="tab">上传附件</a></li>
+          <li role="presentation"><a href="#modal-knet" aria-controls="settings" role="tab" data-toggle="tab">知识关联</a></li>
+        </ul>
+
+        <div className="tab-content">
+          <div role="tabpanel" className="tab-pane active screen-table" id="modal-screen">
+            <ScreensTable ref='table' data={@props.screen_data} xmdm={@props.flow.number} />
+          </div>
+          <div role="tabpanel" className="tab-pane" id="modal-desc">
+            <textarea className='desc-area form-control' placeholder='填写介绍说明内容' rows='10'></textarea>
+          </div>
+          <div role="tabpanel" className="tab-pane upload" id="modal-attach">
+            <label>上传说明附件</label>
+            <input type='file' />
+          </div>
+          <div role="tabpanel" className="tab-pane klink" id="modal-knet">
+            从知识网络关联教材知识点（制作中）
+          </div>
+        </div>
       </div>
     </BSModal.FormModal>
 

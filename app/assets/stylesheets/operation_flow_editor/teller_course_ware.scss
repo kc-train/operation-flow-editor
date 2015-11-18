@@ -138,12 +138,13 @@ body.course-ware {
       }
 
       &.roles, &.complex {
+        @include clearfix;
         label {float: left;margin:0;line-height:30px;}
         .role {
           position: relative;
-          margin-left: 80px;
           height: 30px;line-height:30px;
-          margin-bottom: 10px;
+          margin-left: 20px;
+          float:left;
           &:last-child {margin-bottom: 0;}
           &.teller {
             &:before {
@@ -185,8 +186,11 @@ body.course-ware {
         }
       }
       &.desc {
-        max-height: 400px;
+        // max-height: 400px;
         overflow-y:auto;
+        position: absolute;
+        left:0;right:0;top:81px + 62px + 62px;
+        bottom:200px;
         label {display: block;margin-bottom:10px;}
         pre {
           border:0 none;
@@ -194,6 +198,25 @@ body.course-ware {
           margin:0;
           font-family: arial, '微软雅黑';
           background:none;
+        }
+      }
+
+      &.linked-flows {
+        position: absolute;
+        left:0;right:0;bottom:0;height:200px;
+        overflow-y:auto;
+
+        .flow {
+          // background-color: #FFF;
+          height:24px;line-height:24px;
+          padding: 0 15px;
+          display: block;
+          margin:0 -15px;
+          .number {
+            margin-right: 10px;
+            font-family: 'times new roman';
+            font-weight: bold;
+          }
         }
       }
 

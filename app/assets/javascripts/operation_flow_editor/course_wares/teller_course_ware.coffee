@@ -24,7 +24,7 @@
             <div className='name'>{data.name}</div>
           </div>
           <div className='item roles'>
-            <label>参与角色</label>
+            <label>角色</label>
             <div className='role teller'>柜员</div>
             <div className='role customer'>客户</div>
           </div>
@@ -38,6 +38,17 @@
             <label>关键概念</label>
             <pre>{data.gainian[data.number]}</pre>
           </div>
+          <div className='item linked-flows'>
+            <label>相关交易</label>
+            {
+              for flow in data.linked_flows
+                <a key={flow?.id} className='flow' href="/cw/#{flow?.id}" target='_blank'>
+                  <span className='number'>{flow?.id}</span>
+                  <span>{flow?.name}</span>
+                </a>
+            }
+          </div>
+
           <div className='item qn'>
             <a className='ibtn question-btn' href='javascript:;'>
               <i className='fa fa-question-circle' />
