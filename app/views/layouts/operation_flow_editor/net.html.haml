@@ -1,0 +1,34 @@
+!!!
+%html{:lang => :zh}
+  %head
+    %meta{:'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8'}
+    %meta{:name => 'viewport', :content => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'}
+
+    %title 知识网络组织工具
+    = csrf_meta_tags
+    = stylesheet_link_tag 'operation_flow_editor/application', :media => 'screen'
+    = javascript_include_tag 'operation_flow_editor/application'
+
+  %body.net
+    %nav.navbar.navbar-default
+      .container
+        .navbar-header
+          %a.navbar-brand{href: net_path}
+            %i.glyphicon.glyphicon-home
+            %span 知识网络组织工具
+        .collapse.navbar-collapse
+          %ul.nav.navbar-nav
+            %li.dropdown
+              %a.dropdown-toggle{href: 'javascript:;', data: {toggle: 'dropdown'}}
+                %i.fa.fa-pencil
+                %span 内容制作
+                %span.caret
+              %ul.dropdown-menu
+                %li
+                  %a{href: net_path} 教材浏览
+
+
+    .page-content.container
+      .row
+        .col-sm-12
+          = yield

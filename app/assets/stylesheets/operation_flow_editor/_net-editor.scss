@@ -1,0 +1,22 @@
+.page-net-index {
+  ul {
+    list-style: none;
+    li {
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+      border-bottom: dashed 1px #ddd;
+    }
+  }
+}
+
+.page-net-workflowy-xml-show {
+  ul {
+    list-style: none;
+    padding-left: 20px;
+    li {
+      .name {
+        height:24px;line-height:24px;
+      }
+    }
+  }
+}

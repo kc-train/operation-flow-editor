@@ -19,4 +19,8 @@ OperationFlowEditor::Engine.routes.draw do
   # 课件展示
   get '/show', to: 'home#show', as: 'show'
   get '/cw/:xmdm', to: 'course_ware#show'
+
+  # 知识网络组织
+  get 'net', to: 'net#index', as: 'net'
+  get 'net/:name', to: 'net#show', as: 'net_show'
 end
