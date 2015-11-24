@@ -1,1 +1,7 @@
-= react_component 'PageNetWorkflowyXmlShow', data: @data
+:ruby
+  editor_data = {
+    workflowy_data: @data,
+    tags_data: @tags_data
+  }
+
+= react_component 'PageNetArranger', data: editor_data
