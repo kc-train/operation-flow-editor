@@ -5,10 +5,36 @@ module OperationFlowEditor
     def index
     end
 
-    def show
+    def catalog
       name = params[:name]
       @data = get_workflowy_data name
-      @tags_data = get_tags_data name
+      render layout: 'operation_flow_editor/net_editor'
+    end
+
+    def tags
+      name = params[:name]
+      @data = get_tags_data name
+      render layout: 'operation_flow_editor/net_editor'
+    end
+
+    def tagging
+      name = params[:name]
+      @data = {
+        tagging_stores: OperationFlowEditor::TaggingStore.where(book_name: name).map(&:simple_json),
+        workflowy: get_workflowy_data(name),
+        tags: get_tags_data(name)
+      }
+      render layout: 'operation_flow_editor/net_editor'
+    end
+
+    # 创建整理记录
+    def create_tagging_store
+      ts = OperationFlowEditor::TaggingStore.new
+      ts.creator_name = params[:creator_name]
+      ts.book_name = params[:name]
+      ts.save
+
+      render json: ts.simple_json
     end
 
     private

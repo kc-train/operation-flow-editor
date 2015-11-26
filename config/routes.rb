@@ -22,5 +22,8 @@ OperationFlowEditor::Engine.routes.draw do
 
   # 知识网络组织
   get 'net', to: 'net#index', as: 'net'
-  get 'net/:name', to: 'net#show', as: 'net_show'
+  get 'net/:name/catalog', to: 'net#catalog', as: 'net_catalog'
+  get 'net/:name/tags', to: 'net#tags', as: 'net_tags'
+  get 'net/:name/tagging', to: 'net#tagging', as: 'net_tagging'
+  post 'net/:name/create_tagging_store', to: 'net#create_tagging_store', as: 'net_create_tagging_store'
 end

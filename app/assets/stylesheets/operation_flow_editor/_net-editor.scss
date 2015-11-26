@@ -13,12 +13,65 @@ body.net {
   }
 }
 
+$sidebar_w: 100px;
+.net-editor-sidebar {
+  $w: $sidebar_w;
+  position: absolute;
+  top:0;bottom:0;left:0;width:$w;
+  background-color: #423C38;
+  a.item {
+    display: block;
+    height: $w - 20px;
+    line-height: $w - 20px;
+    color:white;
+    text-decoration: none;
+    text-align: center;
+    .ibox {
+      height:100%;
+      margin:0 10px;
+      border-bottom: solid 1px rgba(white, 0.4);
+    }
+    &:hover {
+      background-color: rgba(white, 0.1);
+    }
+    &.active, &.active:hover{
+      background-color: none;
+      color:#423C38;
+      .ibox {
+        margin:0 0 0 10px;
+        background-color: #fafafa;
+        border-bottom: 0 none;
+      }
+    }
+  }
+}
+
+$help_w: 320px;
+.net-editor-main {
+  position: absolute;
+  left:$sidebar_w;
+  top:0;right:0;bottom:0;
+
+  .net-editor-help {
+    position: absolute;
+    top:0;bottom:0;right:0;
+    width:$help_w;
+    padding:20px;
+    background-color: #ffffda;
+    border-left:solid 1px #eee;
+    h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+// 目录树
 .page-net-workflowy-xml-show {
-  position: fixed;
-  top:51px;left:0;bottom:0;
-  width:50%;
-  padding:15px;
+  position: absolute;
+  top:0;left:0;right:$help_w;bottom:0;
   overflow-y:scroll;
+  padding: 20px;
 
   ul {
     list-style: none;
@@ -33,14 +86,14 @@ body.net {
           position: absolute;
           height:24px;line-height:24px;
           width:24px;
-          color: #175079;
+          color: grayscale(#175079);
           border-radius:3px;
           text-align: center;
           text-decoration: none;
           top:3px;left:0;
           transition: all .2s ease-out;
           &:hover {
-            background-color: #C1E3F7;
+            background-color: grayscale(#C1E3F7);
           }
         } 
         .name {
@@ -83,17 +136,139 @@ body.net {
   }
 }
 
-.arrange-wizard {
-  position: fixed;
-  top:51px;right:0;bottom:0;
-  width:50%;
+// 概念集合
+.page-net-tags {
+  position: absolute;
+  top:0;left:0;right:$help_w;bottom:0;
+  overflow-y:scroll;
+  padding: 20px;
+
+  .tag {
+    max-width: 500px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: dashed 1px #ddd;
+    .name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .desc {
+      margin-bottom: 10px;
+    }
+    .linked-tags {
+      span.l-tag {
+        margin-right: 10px;
+        font-size: 13px;
+        color: #888;
+      }
+    }
+  }
+}
+
+.net-tagging-tool {
+  position: absolute;
+  top:0;left:0;right:$help_w;bottom:0;
+  .net-tagging-store-list {
+    position: absolute;
+    top:0;left:20px;bottom:0;width:200px;
+    border-right:solid 1px #ddd;
+    border-left:solid 1px #ddd;
+    background-color: lighten(#423C38, 60%);
+
+    h3 {
+      text-align: center;
+      margin:0;
+      height:50px;line-height:50px;
+      font-size: 16px;
+      font-weight: normal;
+      text-align: center;
+      border-bottom: solid 2px #ccc;
+      box-sizing:content-box;padding-right:32px;
+    }
+    .add-btn {
+      position: absolute;
+      height:32px;width:32px;
+      line-height:32px;
+      text-align:center;
+      border-radius:4px;
+      top:9px;right:9px;bottom:9px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 18px;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+    .store-form {
+      z-index:100;
+      position: absolute;
+      left: 156px;top:62px;
+      border: solid 1px #ccc;
+      background-color: white;
+      border-radius: 5px;
+      padding: 15px;
+      width:300px;
+      box-shadow:0px 0px 14px rgba(black, 0.3);
+      &:before {
+        content: "";
+        position: absolute;
+        top:-16px;left:9px;
+        border:solid 8px transparent;
+        border-bottom:solid 8px white;
+      }
+      .ops {
+        margin-top: 10px;
+        padding-top:10px;
+        border-top:solid 1px #ddd;
+        .btn {width:80px;margin-right: 10px;}
+      }
+    }
+    .item {
+      padding: 10px;
+      border-bottom:solid 1px #ddd;
+      background-color: #FFF;
+      margin: 10px 0 10px 10px;
+
+      .creator {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .created-at {
+        font-size: 12px;
+        color: #888;
+      }
+      &:hover {
+        cursor:pointer;
+        background-color: #C1E3F7;
+      }
+    }
+  }
+}
+
+
+/////////////////////////
+
+.page-net-arrange {
+  position: absolute;
+  top:0;bottom:0;left:0;right:0;
+  margin:auto;
+  width:800px;
+  border-left:solid 1px #ddd;
+  border-right:solid 1px #ddd;
+  background-color: #FFF;
+}
+
+.net-tagging-wizard {
+  position: absolute;
+  left:220px;top:0;bottom:0;right:0;
   background-color: #FFF;
 
   .buckets {
     position: absolute;
-    top:0;left:0;bottom:0;
+    top:0;right:0;bottom:0;
     width:50%;
-    border-right:solid 1px #ddd;
+    
 
     .current {
       padding:15px;
@@ -114,9 +289,10 @@ body.net {
   }
   .taginfo {
     position: absolute;
-    top:0;right:0;bottom:0;
+    top:0;left:0;bottom:0;
     width:50%;
     padding: 15px;
+    border-right:solid 1px #ddd;
 
     .help {
       margin:-15px -15px 15px;
@@ -156,24 +332,6 @@ body.net {
       color:white;
       background-color: #5CB85C;
       border-radius:10px;
-    }
-  }
-}
-
-.page-net-tags {
-  position: fixed;
-  top:51px;right:0;bottom:0;
-  width:500px;
-  padding:15px;
-  overflow-y:scroll;
-  border-left:solid 1px #ddd;
-  background-color: #FFF;
-  .tag {
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-    border-bottom: dashed 1px #ddd;
-    .name {
-      font-weight: bold;
     }
   }
 }
