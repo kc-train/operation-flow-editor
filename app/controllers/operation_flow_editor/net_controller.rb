@@ -7,22 +7,27 @@ module OperationFlowEditor
 
     def catalog
       name = params[:name]
-      @data = get_workflowy_data name
+      meta = find_or_create_meta name
+      @data = meta.catalog_data
       render layout: 'operation_flow_editor/net_editor'
     end
 
     def tags
       name = params[:name]
-      @data = get_tags_data name
+      meta = find_or_create_meta name
+      @data = meta.tags_data
       render layout: 'operation_flow_editor/net_editor'
     end
 
     def tagging
       name = params[:name]
+      meta = find_or_create_meta name
+
       @data = {
+        book_name: name,
         tagging_stores: OperationFlowEditor::TaggingStore.where(book_name: name).map(&:simple_json),
-        workflowy: get_workflowy_data(name),
-        tags: get_tags_data(name)
+        catalog_data: meta.catalog_data,
+        tags_data: meta.tags_data
       }
       render layout: 'operation_flow_editor/net_editor'
     end
@@ -37,7 +42,36 @@ module OperationFlowEditor
       render json: ts.simple_json
     end
 
+    def get_tagging_store
+      id = params[:id]
+      ts = OperationFlowEditor::TaggingStore.find(id)
+      render json: ts.complex_json
+    end
+
+    def save_tagging_store
+      id = params[:id]
+      ts = OperationFlowEditor::TaggingStore.find(id)
+      ts.current_tag = params[:current_tag]
+      ts.current_chapter = params[:current_chapter]
+      ts.data = params[:link_data]
+      ts.save
+      render json: ts.complex_json
+    end
+
     private
+      def find_or_create_meta(book_name)
+        meta = OperationFlowEditor::BookMeta.where(book_name: book_name).first
+        if meta.blank?
+          meta = OperationFlowEditor::BookMeta.new(
+            book_name: book_name,
+            catalog_data: get_workflowy_data(book_name),
+            tags_data: get_tags_data(book_name)
+          )
+          meta.save
+        end
+        meta
+      end
+
       def get_workflowy_data(name)
         path = File.join __dir__, '../../..', "net-data/#{name}.workflowy.xml"
         
@@ -55,6 +89,7 @@ module OperationFlowEditor
 
       def _r(outline_doc, depth)
         {
+          id: randstr,
           name: outline_doc['text'],
           depth: depth,
           children: outline_doc.css('>outline').map { |child|
@@ -79,6 +114,7 @@ module OperationFlowEditor
         }.map {|x|
           arr = x.split(/\n/).map(&:strip)
           {
+            id: randstr,
             name: arr[0].sub('#', ''),
             desc: arr[1..-2],
             linked_tags: arr[-1].split('#').map(&:strip).select {|s|
@@ -86,6 +122,16 @@ module OperationFlowEditor
             }
           }
         }
+      end
+
+      def randstr(length=8)
+        base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        size = base.size
+        re = '' << base[rand(size-10)]
+        (length - 1).times {
+          re << base[rand(size)]
+        }
+        re
       end
   end
 end

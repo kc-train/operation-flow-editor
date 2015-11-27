@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<opml version="2.0">
+  <head>
+    <ownerEmail>wudibiz@163.com</ownerEmail>
+  </head>
+  <body>
+    <outline text="2012银行从业资格考试教材【公共基础】" >
+      <outline text="第1章 中国银行体系概况" >
+        <outline text="1.1 中央银行、监管机构与自律组织" >
+          <outline text="1.1.1 中央银行" >
+            <outline text="1. 职能" />
+            <outline text="2. 职责" /></outline>
+        </outline>
+      </outline>
+      <outline text="第2章 银行经营环境" >
+        <outline text="2.1 经济环境" >
+          <outline text="2.1.1宏观经济运行" >
+            <outline text="1.宏观经济发展目标及其衡量指标" />
+            <outline text="2.经济周期" /></outline>
+        </outline>
+      </outline>
+    </outline>
+  </body>
+</opml>

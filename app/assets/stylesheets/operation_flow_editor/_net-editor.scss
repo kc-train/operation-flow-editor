@@ -172,9 +172,10 @@ $help_w: 320px;
   .net-tagging-store-list {
     position: absolute;
     top:0;left:20px;bottom:0;width:200px;
-    border-right:solid 1px #ddd;
-    border-left:solid 1px #ddd;
-    background-color: lighten(#423C38, 60%);
+    // border-right:solid 1px #ddd;
+    // border-left:solid 1px #ddd;
+    background-color: lighten(#423C38, 40%);
+    box-shadow:inset -3px 0 4px rgba(black, 0.2);
 
     h3 {
       text-align: center;
@@ -185,6 +186,7 @@ $help_w: 320px;
       text-align: center;
       border-bottom: solid 2px #ccc;
       box-sizing:content-box;padding-right:32px;
+      background-color: rgba(white, 0.6);
     }
     .add-btn {
       position: absolute;
@@ -226,9 +228,11 @@ $help_w: 320px;
     }
     .item {
       padding: 10px;
-      border-bottom:solid 1px #ddd;
-      background-color: #FFF;
-      margin: 10px 0 10px 10px;
+      background-color: rgba(white, 0.6);
+      margin: 10px 0px 10px 10px;
+      &.active {
+        background-color: #FFF !important;
+      }
 
       .creator {
         font-weight: bold;
@@ -264,26 +268,63 @@ $help_w: 320px;
   left:220px;top:0;bottom:0;right:0;
   background-color: #FFF;
 
+  &.loading {
+    padding: 20px 40px;
+    i {font-size: 50px;margin-bottom: 20px;}
+  }
+
+  &.blank {background-color: #f7f7f7;}
+  &.blank .blank-desc {
+    padding: 20px 40px;
+    font-size: 16px;
+
+    &:after {
+      content: "";
+      width:136px;height:128px;
+      // background:url(http://i.teamkn.com/i/tfqoh6K0.png);
+      position: absolute;
+      top:100px;
+      left:40px;
+    }
+  }
+
   .buckets {
     position: absolute;
     top:0;right:0;bottom:0;
     width:50%;
     
-
     .current {
-      padding:15px;
-      border-bottom:solid 1px #ddd;
-      // background-color: #C1E3F7;
-      // color: #002060;
+      height:50px;line-height:50px;
+      box-sizing:content-box;
+      border-bottom:solid 2px #ddd;
       font-weight: bold;
+      padding:0 15px;
+      font-size: 16px;
     }
     .bucket {
       line-height: 24px;
       padding:10px 15px;
       border-bottom:dashed 1px #ddd;
-      &:hover {
+      cursor: default;
+      position: relative;
+      &:hover, &.selected{
         background-color: #59B4E5;
         color: white;
+      }
+      i.i0 {margin-right: 5px;}
+      i.i1 {
+        position: absolute;
+        width:45px;height:45px;line-height:45px;
+        text-align:center;
+        top:0;right:0;bottom:0;
+        font-size: 27px;
+        transform: scale(0.1);
+        opacity: 0;
+        transition: all .2s ease-out;
+      }
+      &.selected i.i1 {
+        transform: scale(1);
+        opacity: 1;
       }
     }
   }
@@ -291,20 +332,34 @@ $help_w: 320px;
     position: absolute;
     top:0;left:0;bottom:0;
     width:50%;
-    padding: 15px;
     border-right:solid 1px #ddd;
+    box-shadow:inset -3px 0 4px rgba(black, 0.1);
 
-    .help {
-      margin:-15px -15px 15px;
-      border-bottom:dashed 1px #ddd;
-      background-color: #ffffda;
-      padding: 15px;
-      color:rgba(black, 0.6);
+    .book-name {
+      box-sizing:content-box;
+      height:50px;line-height:50px;
+      border-bottom:solid 2px #ddd;
+      padding:0 15px;
+      font-size: 16px;
+      font-weight: bold;
     }
 
-    h3.tagname {
-      margin-top: 0;
-      margin-bottom: 15px;
+    .help {
+      // background-color: #ffffda;
+      margin: 15px;
+      padding: 0 0 15px 0;
+      color:rgba(black, 0.6);
+      border-bottom: dashed 1px #ccc;
+    }
+
+    .tagtext {
+      padding: 0 15px 15px;
+      h3.tagname {
+        margin-top: 0;
+        margin-bottom: 15px;
+        i {margin-right: 10px;color:#999;}
+      }
+      .tagdesc {}
     }
 
     .stat {
@@ -332,6 +387,22 @@ $help_w: 320px;
       color:white;
       background-color: #5CB85C;
       border-radius:10px;
+      text-decoration: none;
+      &.disabled {
+        pointer-events:none;
+        background-color: grayscale(#5CB85C);
+        opacity: 0.6;
+      }
+      i {margin-right: 15px;}
+
+      .submiting-text {display:none;}
+      &.submiting {
+        pointer-events:none;
+        background-color: grayscale(#5CB85C);
+        opacity: 0.6;
+        .submiting-text {display:block;}
+        .common-text {display:none;}
+      }
     }
   }
 }

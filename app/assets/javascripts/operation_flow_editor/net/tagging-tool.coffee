@@ -1,9 +1,23 @@
 @NetTaggingTool = React.createClass
+  getInitialState: ->
+    active_store_id: null
+
   render: ->
     <div className='net-tagging-tool'>
-      <NetTaggingStoreList book_name={@props.book_name} data={@props.data.tagging_stores} />
-      <NetTaggingWizard data={@props.data} />
+      <NetTaggingStoreList book_name={@props.book_name} data={@props.data.tagging_stores} tool={@} active_store_id={@state.active_store_id} />
+      <NetTaggingWizard ref='wizard' data={@props.data} tool={@} />
     </div>
+
+  load_store_data: (id)->
+    @setState active_store_id: id
+    @refs.wizard.show_loading()
+
+    jQuery.ajax
+      type: 'get'
+      url: "/net/#{@props.book_name}/get_tagging_store/#{id}"
+    .done (res)=>
+      @refs.wizard.set_store_data(res)
+
 
 @NetTaggingStoreList = React.createClass
   getInitialState: ->
@@ -17,7 +31,8 @@
       <NetTaggingStoreList.Form parent={@} ref='form' show={false} book_name={@props.book_name} />
       {
         for ts in @state.tagging_stores
-          <NetTaggingStoreList.Item key={ts.id} data={ts} />
+          active = @props.active_store_id == ts.id
+          <NetTaggingStoreList.Item active={active} key={ts.id} data={ts} tool={@props.tool} />
       }
     </div>
 
@@ -32,10 +47,14 @@
   statics:
     Item: React.createClass
       render: ->
-        <div className='item'>
+        klass = if @props.active then 'item active' else 'item'
+        <div className={klass} onClick={@load_store_data}>
           <div className='creator'>{@props.data.creator_name}</div>
           <div className='created-at'>{@props.data.created_at}</div>
         </div>
+
+      load_store_data: ->
+        @props.tool.load_store_data @props.data.id
 
     Form: React.createClass
       getInitialState: ->
