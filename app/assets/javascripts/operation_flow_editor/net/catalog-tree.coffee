@@ -50,7 +50,7 @@
                   <i className='fa fa-plus' />
                 </a>
             }
-            <div className='name'>{data.name}</div>
+            <div className='name' data-id={data.id}>{data.name}</div>
             {
               if false and has_children
                 <a className='arrange' href='javascript:;'>整理</a>

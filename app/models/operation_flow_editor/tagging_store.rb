@@ -5,9 +5,9 @@ module OperationFlowEditor
 
     field :creator_name # 操作者
     field :book_name # 概念集合名称
-    field :data
-    field :current_tag # 当前正处理的概念
-    field :current_chapter # 当前正处理的目录章节
+    field :data # 整理记录数据
+    field :current_tag # 当前正处理的概念 ID
+    field :current_chapter # 当前正处理的目录章节 ID
 
     default_scope ->{ order(:id.asc) }
 
