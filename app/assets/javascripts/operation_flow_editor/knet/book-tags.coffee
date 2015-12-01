@@ -1,10 +1,12 @@
-@PageNetTags = React.createClass
+@KnetBookTags = React.createClass
+  displayName: 'KnetBookTags'
   render: ->
-    <div className='page-net-tags'>
+    <div className='knet-book-tags'>
+      <h3 className='tags-count'>共 {@props.data.length} 个概念</h3>
+      <hr/>
     {
-      idx = 0
       for tag in @props.data
-        <PageNetTags.Tag key={idx++} data={tag} />
+        <KnetBookTags.Tag key={tag.id} data={tag} />
     }
     </div>
 
@@ -15,7 +17,7 @@
         <div className='tag'>
           <div className='name'>{tag.name}</div>
           <div className='desc'>{tag.desc}</div>
-          <PageNetTags.Links data={tag.linked_tags} />
+          <KnetBookTags.Links data={tag.linked_tag_names} />
         </div>
 
     Links: React.createClass

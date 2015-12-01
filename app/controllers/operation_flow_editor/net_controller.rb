@@ -7,29 +7,29 @@ module OperationFlowEditor
 
     def catalog
       name = params[:name]
-      meta = find_or_create_meta name
-      @data = meta.catalog_data
+      @data = Knet::BookCatalog.get_or_init_data name
       render layout: 'operation_flow_editor/net_editor'
+      # render json: @data
     end
 
     def tags
       name = params[:name]
-      meta = find_or_create_meta name
-      @data = meta.tags_data
+      @data = Knet::BookTag.get_or_init_data name
       render layout: 'operation_flow_editor/net_editor'
+      # render json: @data
     end
 
     def tagging
       name = params[:name]
-      meta = find_or_create_meta name
 
       @data = {
         book_name: name,
-        tagging_stores: OperationFlowEditor::TaggingStore.where(book_name: name).map(&:simple_json),
-        catalog_data: meta.catalog_data,
-        tags_data: meta.tags_data
+        catalogs_data: Knet::BookCatalog.get_or_init_data(name),
+        tags_data: Knet::BookTag.get_or_init_data(name)
+        # tagging_stores: OperationFlowEditor::TaggingStore.where(book: name).book(&:simple_json),
       }
-      render layout: 'operation_flow_editor/net_editor'
+      # render layout: 'operation_flow_editor/net_editor'
+      render json: @data
     end
 
     # 创建整理记录
@@ -57,81 +57,5 @@ module OperationFlowEditor
       ts.save
       render json: ts.complex_json
     end
-
-    private
-      def find_or_create_meta(book_name)
-        meta = OperationFlowEditor::BookMeta.where(book_name: book_name).first
-        if meta.blank?
-          meta = OperationFlowEditor::BookMeta.new(
-            book_name: book_name,
-            catalog_data: get_workflowy_data(book_name),
-            tags_data: get_tags_data(book_name)
-          )
-          meta.save
-        end
-        meta
-      end
-
-      def get_workflowy_data(name)
-        path = File.join __dir__, '../../..', "net-data/#{name}.workflowy.xml"
-        
-        if File.exist? path
-          return xml_2_json Nokogiri::XML open(path)
-        end
-
-        return nil
-      end
-
-      def xml_2_json(xmldoc)
-        root = xmldoc.at('opml body>outline')
-        _r root, 0
-      end
-
-      def _r(outline_doc, depth)
-        {
-          id: randstr,
-          name: outline_doc['text'],
-          depth: depth,
-          children: outline_doc.css('>outline').map { |child|
-            _r child, depth + 1
-          }
-        }
-      end
-
-      def get_tags_data(name)
-        path = File.join __dir__, '../../..', "net-data/#{name}.tags"
-        
-        if File.exist? path
-          return parse_tags File.read(path)
-        end
-
-        return nil
-      end
-
-      def parse_tags(text)
-        text.split(/\-+/).map(&:strip).select {|x|
-          x.present?
-        }.map {|x|
-          arr = x.split(/\n/).map(&:strip)
-          {
-            id: randstr,
-            name: arr[0].sub('#', ''),
-            desc: arr[1..-2],
-            linked_tags: arr[-1].split('#').map(&:strip).select {|s|
-              s.present?
-            }
-          }
-        }
-      end
-
-      def randstr(length=8)
-        base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        size = base.size
-        re = '' << base[rand(size-10)]
-        (length - 1).times {
-          re << base[rand(size)]
-        }
-        re
-      end
   end
 end

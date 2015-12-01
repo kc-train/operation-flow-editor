@@ -67,11 +67,15 @@ $help_w: 320px;
 }
 
 // 目录树
-.page-net-workflowy-xml-show {
+.knet-book-catalog {
   position: absolute;
   top:0;left:0;right:$help_w;bottom:0;
   overflow-y:scroll;
   padding: 20px;
+
+  .blank {
+    line-height: 40px;
+  }
 
   ul {
     list-style: none;
@@ -137,11 +141,15 @@ $help_w: 320px;
 }
 
 // 概念集合
-.page-net-tags {
+.knet-book-tags {
   position: absolute;
   top:0;left:0;right:$help_w;bottom:0;
   overflow-y:scroll;
   padding: 20px;
+
+  .tags-count {
+    margin-top: 0;
+  }
 
   .tag {
     max-width: 500px;
