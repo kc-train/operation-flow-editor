@@ -67,7 +67,7 @@
         can_submit = @state.creator_name.length
 
         <div className='store-form' style={style}>
-          <input type='text' placeholder='输入整理者姓名' className='form-control' onInput={@do_input} value={@state.creator_name}/>
+          <input type='text' placeholder='输入整理者姓名' className='form-control' onChange={@do_input} value={@state.creator_name}/>
           <div className='ops'>
             <a className="btn btn-success btn-sm #{if can_submit then '' else 'disabled'}" onClick={@submit}>确定</a>
             <a className='btn btn-default btn-sm' onClick={@hide}>取消</a>
