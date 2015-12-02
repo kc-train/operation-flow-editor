@@ -28,7 +28,7 @@ module Knet
         book = Knet::BookMeta.where(name: book_name).first
 
         all_tag_ids = Knet::BookTag.where(book: book).map {|x| x.id.to_s}
-        arranged_tag_ids = Knet::BookTaggingTask.where(book: book, finished: true).map {|x| x.tag_id.to_s}
+        arranged_tag_ids = arranged_tag_ids_of(book)
 
         pool_ids = all_tag_ids - arranged_tag_ids
 
@@ -46,6 +46,30 @@ module Knet
             tag: Knet::BookTag.find(tag_id)
           )
         end
+      end
+
+      # 返回已经被整理过的 tag id 列表
+      def arranged_tag_ids_of(book)
+        Knet::BookTaggingTask.where(book: book, finished: true).map {|x| x.tag_id.to_s}.uniq
+      end
+
+      def arranged_tag_ids_with_times_of(book)
+        tag_ids = Knet::BookTaggingTask.where(book: book, finished: true).map {|x| x.tag_id.to_s}
+        hash = Hash.new(0)
+        tag_ids.each do |tag_id|
+          hash[tag_id] = hash[tag_id] + 1
+        end
+        hash
+      end
+
+      def tag_with_catalog_ids_of(book)
+        hash = Hash.new([])
+        Knet::BookTaggingTask.where(book: book, finished: true).each do |x|
+          x.catalog_ids.each { |catalog_id|
+            hash[catalog_id] = (hash[catalog_id] + [x.tag_id.to_s]).uniq
+          }
+        end
+        hash
       end
     end
   end

@@ -72,7 +72,8 @@ class CatalogItem
 @KnetBookCatalog = React.createClass
   displayName: 'KnetBookCatalog'
   getInitialState: ->
-    tree: new CatalogTree @props.data
+    tree: new CatalogTree @props.data.catalogs_data
+    tag_with_catalog_ids: @props.data.tag_with_catalog_ids
 
   render: ->
     tree = @state.tree
@@ -81,7 +82,7 @@ class CatalogItem
       if tree.blank()
         <div className='blank'>没有获取到数据</div>
       else
-        <KnetBookCatalog.List data={tree.roots()} />
+        <KnetBookCatalog.List host={@} data={tree.roots()} />
     }
     </div>
 
@@ -93,7 +94,7 @@ class CatalogItem
         <ul>
         {
           for catalog in catalogs
-            <KnetBookCatalog.Item key={catalog.id} data={catalog} />
+            <KnetBookCatalog.Item key={catalog.id} host={@props.host} data={catalog} />
         }
         </ul>
 
@@ -116,6 +117,9 @@ class CatalogItem
 
         @set_expand_local_storage()
 
+        tag_with_catalog_ids = @props.host.state.tag_with_catalog_ids
+        tag_ids = tag_with_catalog_ids[data.id] || []
+
         <li className={klass.join(' ')}>
           <div className='info'>
             {
@@ -125,11 +129,17 @@ class CatalogItem
                   <i className='fa fa-plus' />
                 </a>
             }
-            <div className='name'>{data.name}</div>
+            <div className='name'>
+              <span>{data.name}</span>
+              {
+                if tag_ids.length
+                  <label>{tag_ids.length} 个概念</label>
+              }
+            </div>
           </div>
           {
             if data.has_children()
-              <KnetBookCatalog.List data={data.children()} />
+              <KnetBookCatalog.List host={@props.host} data={data.children()} />
           }
         </li>
 

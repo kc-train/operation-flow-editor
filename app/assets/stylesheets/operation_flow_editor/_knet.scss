@@ -106,6 +106,19 @@ $help_w: 320px;
           line-height:30px;
           float: left;
           max-width:500px;
+          label {
+            position: relative;
+            top:-1px;
+            margin-left: 10px;
+            margin-bottom: 4px;
+            font-size: 12px;
+            background-color: #666;
+            color:white;
+            height:18px;line-height:18px;
+            border-radius:3px;
+            padding:0 6px;
+            font-weight: normal;
+          }
         }
         a.arrange {
           font-size: 12px;
@@ -161,6 +174,20 @@ $help_w: 320px;
       font-weight: bold;
       font-size: 16px;
       margin-bottom: 10px;
+
+      label {
+        position: relative;
+        top:-1px;
+        margin-left: 10px;
+        margin-bottom: 4px;
+        font-size: 12px;
+        background-color: #5CB85C;
+        color:white;
+        height:18px;line-height:18px;
+        border-radius:3px;
+        padding:0 6px;
+        font-weight: normal;
+      }
     }
     .desc {
       margin-bottom: 10px;

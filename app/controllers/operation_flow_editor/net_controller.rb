@@ -7,14 +7,32 @@ module OperationFlowEditor
 
     def catalog
       name = params[:name]
-      @data = Knet::BookCatalog.get_or_init_data name
+      catalogs_data = Knet::BookCatalog.get_or_init_data name
+
+      book = Knet::BookMeta.where(name: name).first
+      tag_with_catalog_ids = Knet::BookTaggingTask.tag_with_catalog_ids_of(book)
+
+      @data = {
+        catalogs_data: catalogs_data,
+        tag_with_catalog_ids: tag_with_catalog_ids
+      }
+
       render layout: 'operation_flow_editor/net_editor'
       # render json: @data
     end
 
     def tags
       name = params[:name]
-      @data = Knet::BookTag.get_or_init_data name
+      tags_data = Knet::BookTag.get_or_init_data name
+
+      book = Knet::BookMeta.where(name: name).first
+      arranged_tag_ids_with_times = Knet::BookTaggingTask.arranged_tag_ids_with_times_of(book)
+
+      @data = {
+        tags_data: tags_data,
+        arranged_tag_ids_with_times: arranged_tag_ids_with_times
+      }
+
       render layout: 'operation_flow_editor/net_editor'
       # render json: @data
     end
