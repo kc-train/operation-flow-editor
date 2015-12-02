@@ -32,7 +32,7 @@ module Knet
       end
 
       def build_tags_from_file(book)
-        path = Rails.root.join '..', 'net-data', "#{book.name}.tags"
+        path = File.join __dir__, '../../..', 'net-data', "#{book.name}.tags"
 
         if File.exist? path
           return parse_tags book, File.read(path)
