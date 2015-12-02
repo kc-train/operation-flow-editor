@@ -26,36 +26,26 @@ module OperationFlowEditor
         book_name: name,
         catalogs_data: Knet::BookCatalog.get_or_init_data(name),
         tags_data: Knet::BookTag.get_or_init_data(name)
-        # tagging_stores: OperationFlowEditor::TaggingStore.where(book: name).book(&:simple_json),
       }
-      # render layout: 'operation_flow_editor/net_editor'
-      render json: @data
+      render layout: 'operation_flow_editor/net_editor'
+      # render json: @data
     end
 
-    # 创建整理记录
-    def create_tagging_store
-      ts = OperationFlowEditor::TaggingStore.new
-      ts.creator_name = params[:creator_name]
-      ts.book_name = params[:name]
-      ts.save
-
-      render json: ts.simple_json
+    def start_tagging
+      name = params[:name]
+      task = Knet::BookTaggingTask.dispatch(name)
+      render json: task.simple_data
     end
 
-    def get_tagging_store
-      id = params[:id]
-      ts = OperationFlowEditor::TaggingStore.find(id)
-      render json: ts.complex_json
-    end
-
-    def save_tagging_store
-      id = params[:id]
-      ts = OperationFlowEditor::TaggingStore.find(id)
-      ts.current_tag = params[:current_tag]
-      ts.current_chapter = params[:current_chapter]
-      ts.data = params[:link_data]
-      ts.save
-      render json: ts.complex_json
+    def save_tagging_task
+      task = Knet::BookTaggingTask.find params[:task_id]
+      task.catalog_ids += params[:added_catalog_ids]
+      task.catalog_stack = params[:new_stack]
+      if task.catalog_stack.blank?
+        task.finished = true 
+      end
+      task.save
+      render json: task.simple_data
     end
   end
 end

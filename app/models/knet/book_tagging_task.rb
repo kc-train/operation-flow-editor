@@ -1,0 +1,52 @@
+module Knet
+  class BookTaggingTask
+    include Mongoid::Document
+    include Mongoid::Timestamps
+
+    belongs_to :book, class_name: 'Knet::BookMeta'
+    belongs_to :tag, class_name: 'Knet::BookTag'
+    
+    field :catalog_ids, default: [] # 相关目录 ID
+    field :catalog_stack, default: [] # 待分配目录堆栈
+    field :finished, default: false
+
+    default_scope ->{ order(:id.asc) }
+
+    def simple_data
+      {
+        id: id.to_s,
+        tag: tag.simple_data,
+        catalog_ids: catalog_ids,
+        catalog_stack: catalog_stack,
+        finished: finished
+      }
+    end
+
+    class << self
+      # 调度一个整理任务
+      def dispatch(book_name)
+        book = Knet::BookMeta.where(name: book_name).first
+
+        all_tag_ids = Knet::BookTag.where(book: book).map {|x| x.id.to_s}
+        arranged_tag_ids = Knet::BookTaggingTask.where(book: book, finished: true).map {|x| x.tag_id.to_s}
+
+        pool_ids = all_tag_ids - arranged_tag_ids
+
+        if pool_ids.present?
+          # 还有备选的概念
+          tag_id = pool_ids[rand(pool_ids.length)]
+          task = Knet::BookTaggingTask.create(
+            book: book,
+            tag: Knet::BookTag.find(tag_id)
+          )
+        else
+          tag_id = all_tag_ids[rand(all_tag_ids.length)]
+          task = Knet::BookTaggingTask.create(
+            book: book,
+            tag: Knet::BookTag.find(tag_id)
+          )
+        end
+      end
+    end
+  end
+end

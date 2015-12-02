@@ -1,4 +1,4 @@
-class IDSet
+@IDSet = class
   constructor: ->
     @hash = {}
 
@@ -19,11 +19,17 @@ class IDSet
       .map (id)=> @hash[id]
       .filter func
 
+  ids: ->
+    Object.keys(@hash)
 
-class CatalogTree
-  constructor: (array_data)->
+  count: ->
+    Object.keys(@hash).length
+
+
+@CatalogTree = class
+  constructor: (@array_data)->
     @set = new IDSet()
-    for item in array_data
+    for item in @array_data
       catalog_item = new CatalogItem item, @
       @set.add catalog_item
 
@@ -32,6 +38,16 @@ class CatalogTree
 
   roots: ->
     @set.filter (x)-> x.depth is 0
+
+  get: (id)->
+    @set.get(id)
+
+  get_index: (id)->
+    (@array_data.map (x)-> x.id).indexOf id
+
+  count: ->
+    @set.count()
+
 
 class CatalogItem
   constructor: (data, @tree)->
@@ -45,6 +61,13 @@ class CatalogItem
 
   children: ->
     @children_ids.map (id)=> @tree.set.get(id)
+
+  descendants: ->
+    re = []
+    for child in @children()
+      re = re.concat child.descendants()
+    re
+
 
 @KnetBookCatalog = React.createClass
   displayName: 'KnetBookCatalog'

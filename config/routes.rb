@@ -25,7 +25,7 @@ OperationFlowEditor::Engine.routes.draw do
   get 'net/:name/catalog', to: 'net#catalog', as: 'net_catalog'
   get 'net/:name/tags', to: 'net#tags', as: 'net_tags'
   get 'net/:name/tagging', to: 'net#tagging', as: 'net_tagging'
-  post 'net/:name/create_tagging_store', to: 'net#create_tagging_store', as: 'net_create_tagging_store'
-  get 'net/:name/get_tagging_store/:id', to: 'net#get_tagging_store', as: 'net_get_tagging_store'
-  put 'net/:name/save_tagging_store/:id', to: 'net#save_tagging_store', as: 'net_save_tagging_store'
+
+  post 'net/:name/start_tagging', to: 'net#start_tagging', as: 'net_start_tagging'
+  put 'net/:name/save_tagging_task', to: 'net#save_tagging_task', as: 'net_save_tagging_task'
 end

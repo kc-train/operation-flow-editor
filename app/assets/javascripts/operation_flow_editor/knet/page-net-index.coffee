@@ -5,7 +5,7 @@
       {#<NetEditorSidebar.Item name={@props.name} link='overview' text='概览' />}
       <NetEditorSidebar.Item parent={@} link='catalog' text='原始目录' />
       <NetEditorSidebar.Item parent={@} link='tags' text='概念提取' />
-      <NetEditorSidebar.Item parent={@} link='tagging' text='打标签' />
+      <NetEditorSidebar.Item parent={@} link='tagging' text='概念整理' />
     </div>
   statics:
     Item: React.createClass

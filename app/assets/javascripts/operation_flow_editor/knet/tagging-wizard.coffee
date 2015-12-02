@@ -1,249 +1,156 @@
-class TagFinder
-  constructor: (@tags_data)->
-
-  get_current_or_first_tag: (tag_id)->
-    return (@tags_data.filter (x)-> x.id == tag_id)[0] if tag_id?
-    return @tags_data[0]
-
-  count: ->
-    @tags_data.length
-
-  indexOf: (tag)->
-    @tags_data.indexOf tag
-
-  get: (idx)->
-    @tags_data[idx]
-
-  get_next_or_first: (tag)->
-    next_idx = @indexOf(tag) + 1
-    next_idx = 0 if next_idx == @count()
-    @get next_idx
-
-  is_last: (tag)->
-    @indexOf(tag) == @count() - 1
-
-
-class ChapterFinder
-  constructor: (@catalog_data)->
-    @chapters_data = @_rgct @catalog_data, []
-
-  _rgct: (chapter, arr)->
-    arr.push chapter
-    for child in chapter.children
-      child.parent = chapter
-      @_rgct child, arr
-    arr
-
-  get_current_or_first_chapter: (chapter_id)->
-    return (@chapters_data.filter (x)-> x.id == chapter_id)[0] if chapter_id?
-    return @chapters_data[0]
-
-  count: ->
-    @chapters_data.length
-
-  indexOf: (chapter)->
-    @chapters_data.indexOf chapter
-
-  get: (idx)->
-    @chapters_data[idx]
-
-  get_next: (chapter)->
-    @get @indexOf(chapter) + 1
-
-  is_last: (chapter)->
-    @indexOf(chapter) == @count() - 1
-
-
 @NetTaggingWizard = React.createClass
   displayName: 'NetTaggingWizard'
   getInitialState: ->
     # 值不变的
     book_name: @props.data.book_name
-    chapter_finder: new ChapterFinder @props.data.catalog_data
+    catalog_tree: new CatalogTree @props.data.catalogs_data
     
     # 值一直改变的
-    store_data: null
-    loading: false
-    selected_buckets: {}
+    status: 'ready' # loading, tagging, complete
     submiting: false
-    complete: false
+    current_task: null
+    selected_catalogs: null
+
+    # complete: false
 
   show_loading: ->
-    @setState loading: true
+    @setState status: 'loading'
 
-  set_store_data: (store_data)->
-    if store_data.current_chapter == 'COMPLETE'
+  start: ->
+    @show_loading()
+    jQuery.ajax
+      url: "/net/#{@state.book_name}/start_tagging"
+      type: 'POST'
+    .done (res)=>
+      @set_task res
+
+  set_task: (res)->
+    if res.finished
       @setState
-        store_data: store_data
-        loading: false
-        selected_buckets: {}
+        status: 'complete'
+    else
+      @setState
+        status: 'tagging'
         submiting: false
+        current_task: res
+        selected_catalogs: new IDSet()
 
-        current_chapter: null
-        current_tag: null
-        tag_scope: null
-        complete: true
-
-      return
-
-    current_chapter = @state.chapter_finder.get_current_or_first_chapter store_data.current_chapter
-    parent_chapter = current_chapter.parent
-
-    if parent_chapter
-      finder0 = new TagFinder @props.data.tags_data
-
-      chapter_tagging_data = store_data.data[parent_chapter.id]
-      tags = []
-      for tag_id, chapter_ids of chapter_tagging_data
-        if chapter_ids.indexOf(current_chapter.id) >= 0
-          tags.push finder0.get_current_or_first_tag tag_id
-
-      tag_scope = new TagFinder tags
-      current_tag = tag_scope.get_current_or_first_tag store_data.current_tag
-      current_tag = tag_scope.get(0) if not current_tag?
-
+  get_current_catalog: ->
+    current_catalog_id = @state.current_task.catalog_stack[0]
+    if current_catalog_id?
+      @state.catalog_tree.get current_catalog_id
     else
-      tag_scope = new TagFinder @props.data.tags_data
-      current_tag = tag_scope.get_current_or_first_tag store_data.current_tag
+      @state.catalog_tree.roots()[0]
 
-
-    @setState
-      store_data: store_data
-      loading: false
-      selected_buckets: {}
-      submiting: false
-
-      current_chapter: current_chapter
-      current_tag: current_tag
-      tag_scope: tag_scope
-      complete: false
-
-    # 如果满足一定条件，直接提交
-    setTimeout =>
-      # 情况一，当前章节只有一个子章节
-      if @state.current_chapter.children.length is 1
-        @toggle_select @state.current_chapter.children[0].id
-        @submit()
-
-      # 情况二，当前章节是叶子章节
-      if @state.current_chapter.children.length is 0
-        @submit()
-
-      # 情况三，章节没有分配任何 TAG
-      if @state.tag_scope.count() is 0
-        @submit()
-
-    , 1
-
-
-  _get_progress: ->
-    tags_total = @state.tag_scope.count()
-    chapter_total = @state.chapter_finder.count()
-
-    tagging_data = @state.store_data?.data || {}
-    current_chapter_tagging_data = tagging_data[@state.current_chapter.id] || {}
-
-    tags_done = Object.keys(current_chapter_tagging_data).length
-    if tags_done == 0
-      chapter_done = Object.keys(tagging_data).length
+  toggle_select: (catalog_item)->
+    set = @state.selected_catalogs
+    if set.get(catalog_item.id)?
+      set.remove catalog_item.id
     else
-      chapter_done = Object.keys(tagging_data).length - 1
+      set.add catalog_item
+    @setState selected_catalogs: set
 
-    tags_total: tags_total
-    chapter_total: chapter_total
-    tags_done: tags_done
-    chapter_done: chapter_done
+  # 获取因为目前的关联操作而新增关联，包括连带新增关联的目录项列表
+  get_added_catalog_ids: ->
+    stack = @state.selected_catalogs.ids().sort()
+    added_ids = []
+    while stack.length > 0
+      id = stack.shift()
+      citem = @state.catalog_tree.get(id)
+      added_ids.push id
+      # 如果某个已选目录项只有一个子项，那就直接把子项也加进来
+      # 因为备选项只有一项，所以不用选
+      if citem.children().length is 1
+        stack.push citem.children_ids[0]
 
-  toggle_select: (chapter_id)->
-    selected_buckets = @state.selected_buckets
-    chapter = selected_buckets[chapter_id]
-    if chapter?
-      delete selected_buckets[chapter_id]
-    else
-      selected_buckets[chapter_id] = chapter_id
-    @setState selected_buckets: selected_buckets
+    return added_ids
 
   submit: ->
-    current_chapter = @state.current_chapter
-    current_tag = @state.current_tag
-    selected_buckets = @state.selected_buckets
-    
-    link_data = @state.store_data?.data || {}
-    link_data[current_chapter.id] ||= {}
+    task_id = @state.current_task.id
+    added_catalog_ids = @get_added_catalog_ids()
+    new_stack = (id for id in @state.current_task.catalog_stack)
+    # 已经处理完的，移出堆栈
+    new_stack.shift()
+    # 本次操作分配的目录项，子节点数 > 1 的，加入堆栈
+    for _id in added_catalog_ids
+      citem = @state.catalog_tree.get _id
+      new_stack.push _id if citem.children().length > 1
 
-    if current_chapter.children.length is 0
-      link_data[current_chapter.id] = null
-
-    else if @state.tag_scope.count() > 0
-      link_data[current_chapter.id][current_tag.id] = Object.keys(selected_buckets)
-
-    else
-      link_data[current_chapter.id] = null
-
-    # 规则：
-    # 如果 chapter 过完了，全部结束
-    # 否则如果 tag 过完了，下一个 chapter，第一个 tag
-    # 否则还是这个 chapter 下一个 tag
-
-    tag_round_complete = @state.tag_scope.is_last current_tag
-    chapter_round_complete = @state.chapter_finder.is_last current_chapter
-
-    if tag_round_complete
-      next_tag = @state.tag_scope.get_next_or_first current_tag
-      next_chapter = @state.chapter_finder.get_next current_chapter
-
-    else
-      next_tag = @state.tag_scope.get_next_or_first current_tag
-      next_chapter = current_chapter
-
-    submit_data =
-      current_tag: if next_tag? then next_tag.id else 'COMPLETE'
-      current_chapter: if next_chapter? then next_chapter.id else 'COMPLETE'
-      link_data: link_data
+    submit_data = {
+      task_id: task_id
+      added_catalog_ids: added_catalog_ids
+      new_stack: new_stack
+    }
 
     @do_submit submit_data
 
   do_submit: (submit_data)->
     @setState submiting: true
     jQuery.ajax
-      url: "/net/#{@state.book_name}/save_tagging_store/#{@state.store_data?.id}"
+      url: "/net/#{@state.book_name}/save_tagging_task"
       type: 'PUT'
       data: submit_data
     .done (res)=>
-      @set_store_data res
+      @set_task res
 
+  get_progress: ->
+    catalogs_total = @state.catalog_tree.count()
+    current_catalog_item = @get_current_catalog()
+
+    # 计算已整理的目录项数目
+    # 特殊情况：如果堆栈是空的，说明所有目录项都未整理
+    # 所有待整理堆栈里的目录（以及其子孙目录）都是待整理的
+    # 其他目录都可认为是已整理的
+    
+    if @state.current_task.catalog_stack.length > 0
+      catalogs_not_done = 0
+      for id in @state.current_task.catalog_stack
+        catalogs_not_done += 1 + @state.catalog_tree.get(id).descendants().length
+    else
+      catalogs_not_done = catalogs_total
+
+    return {
+      catalogs_total: catalogs_total
+      catalogs_done: catalogs_total - catalogs_not_done
+    }
 
   render: ->
-    if @state.loading
+    if @state.status is 'ready'
+      <div className='net-tagging-wizard ready'>
+        <div className='desc'>
+          点击“开始整理”后，后台会根据一定规则分配给任务执行者需要整理的概念，执行者不断执行对应到目录项的关联操作，直到提示执行完毕。
+        </div>
+        <a className='btn btn-success btn-lg' onClick={@start}>
+          <i className='fa fa-play-circle' />
+          <span>开始整理任务</span>
+        </a>
+      </div>
+
+    else if @state.status is 'loading'
       <div className='net-tagging-wizard loading'>
         <i className='fa fa-spinner fa-pulse' />
-        <div>正在加载整理记录</div>
+        <div>正在加载</div>
       </div>
 
-    else if @state.complete
-      <div className='net-tagging-wizard loading'>
-        <i className='fa fa-check' />
-        <div>已经全部整理完毕</div>
-      </div>
-
-    else if not @state.store_data?
-      <div className='net-tagging-wizard blank'>
-        <div className='blank-desc'>
-          <h4>{@state.book_name}</h4>
-          请创建或选择一个整理记录来进行概念整理。<br/>
-          每个整理者需要建立自己的整理记录。
+    else if @state.status is 'complete'
+      <div className='net-tagging-wizard ready'>
+        <div className='desc'>
+          <i className='fa fa-check' />
+          <span>概念整理任务执行完毕</span>
         </div>
+        <a className='btn btn-success btn-lg' onClick={@start}>
+          <i className='fa fa-play-circle' />
+          <span>开始下一个任务</span>
+        </a>
       </div>
 
-    else
-      current_tag = @state.current_tag
-      current_chapter = @state.current_chapter
-      progress = @_get_progress()
-
-      can_submit = Object.keys(@state.selected_buckets).length
+    else if @state.status is 'tagging'
+      progress = @get_progress()
+      can_submit = not @state.selected_catalogs.blank()
+      current_catalog_item = @get_current_catalog()
 
       <div className='net-tagging-wizard'>
-        <NetTaggingWizard.Buckets data={current_chapter} wizard={@} selected_buckets={@state.selected_buckets} />
+        <NetTaggingWizard.Buckets data={current_catalog_item} wizard={@} selected_catalogs={@state.selected_catalogs} />
 
         <div className='taginfo'>
           <div className='book-name'>教材：{@props.data.book_name}</div>
@@ -252,12 +159,11 @@ class ChapterFinder
             <div className='help'>
               说明：下方显示了当前正在整理的概念，而右方列出了一些章节标题。根据个人理解判断，点选与该概念密切相关的章节标题，建立联系后按下确定按钮。
             </div>
-            <NetTaggingWizard.TagText data={current_tag} />
+            <NetTaggingWizard.TagText data={@state.current_task.tag} />
           </div>
 
           <div className='bottom-box'>
-            <NetTaggingWizard.Stat text='本轮标签进度' done={progress.tags_done} total={progress.tags_total} />
-            <NetTaggingWizard.Stat text='总体章节进度' done={progress.chapter_done} total={progress.chapter_total} />
+            <NetTaggingWizard.Stat text='当前任务进度' done={progress.catalogs_done} total={progress.catalogs_total} />
             <NetTaggingWizard.SubmitBtn can_submit={can_submit} submiting={@state.submiting} click={@submit} />
           </div>
 
@@ -270,35 +176,35 @@ class ChapterFinder
         selected_buckets: {}
 
       render: ->
-        current_chapter = @props.data
+        catalog_item = @props.data
 
         <div className='buckets'>
           <div className='current'>
-            当前章节：{current_chapter.name}
+            当前章节：{catalog_item.name}
           </div>
           {
-            for child in current_chapter.children
-              selected = @props.selected_buckets[child.id]?
+            for child in catalog_item.children()
+              selected = @props.selected_catalogs.get(child.id)?
               <NetTaggingWizard.Bucket key={child.id} data={child} parent={@} selected={selected} />
           }
         </div>
 
-      toggle_select: (chapter_id)->
-        @props.wizard.toggle_select chapter_id
+      toggle_select: (catalog_item)->
+        @props.wizard.toggle_select catalog_item
 
     Bucket: React.createClass
       render: ->
-        chapter = @props.data
+        catalog_item = @props.data
         klass = if @props.selected then 'bucket selected' else 'bucket'
 
-        <div key={chapter.id} className={klass} onClick={@select}>
+        <div key={catalog_item.id} className={klass} onClick={@select}>
           <i className='fa fa-chevron-right i0' />
-          <span>{chapter.name}</span>
+          <span>{catalog_item.name}</span>
           <i className='fa fa-check i1' />
         </div>
 
       select: ->
-        @props.parent.toggle_select @props.data.id
+        @props.parent.toggle_select @props.data
 
     Stat: React.createClass
       render: ->

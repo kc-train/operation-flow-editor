@@ -53,6 +53,7 @@ $help_w: 320px;
   top:0;right:0;bottom:0;
 
   .net-editor-help {
+    overflow:hidden;
     position: absolute;
     top:0;bottom:0;right:0;
     width:$help_w;
@@ -273,8 +274,16 @@ $help_w: 320px;
 
 .net-tagging-wizard {
   position: absolute;
-  left:220px;top:0;bottom:0;right:0;
+  left:20px;top:0;bottom:0;right:0;
   background-color: #FFF;
+
+  &.ready {
+    padding: 20px 40px;
+    .desc {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+  }
 
   &.loading {
     padding: 20px 40px;
@@ -300,6 +309,7 @@ $help_w: 320px;
     position: absolute;
     top:0;right:0;bottom:0;
     width:50%;
+    overflow-y:scroll;
     
     .current {
       height:50px;line-height:50px;
@@ -315,7 +325,10 @@ $help_w: 320px;
       border-bottom:dashed 1px #ddd;
       cursor: default;
       position: relative;
-      &:hover, &.selected{
+      &:hover {
+        background-color: lighten(#59B4E5, 30%);
+      }
+      &.selected{
         background-color: #59B4E5;
         color: white;
       }
