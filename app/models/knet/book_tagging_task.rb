@@ -23,11 +23,20 @@ module Knet
     end
 
     class << self
+      # 指定针对一个 tag 进行整理任务
+      def from_tag_id(tag_id)
+        tag = Knet::BookTag.where(id: tag_id).first
+        task = Knet::BookTaggingTask.create(
+          book: tag.book,
+          tag: tag
+        )
+      end
+
       # 调度一个整理任务
       def dispatch(book_name)
         book = Knet::BookMeta.where(name: book_name).first
 
-        all_tag_ids = Knet::BookTag.where(book: book).map {|x| x.id.to_s}
+        all_tag_ids = Knet::BookTag.can_dispatch_ids_of(book)
         arranged_tag_ids = arranged_tag_ids_of(book)
 
         pool_ids = all_tag_ids - arranged_tag_ids

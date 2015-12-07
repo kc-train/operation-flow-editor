@@ -29,6 +29,7 @@ module OperationFlowEditor
       arranged_tag_ids_with_times = Knet::BookTaggingTask.arranged_tag_ids_with_times_of(book)
 
       @data = {
+        book_data: book.simple_data,
         tags_data: tags_data,
         arranged_tag_ids_with_times: arranged_tag_ids_with_times
       }
@@ -45,6 +46,11 @@ module OperationFlowEditor
         catalogs_data: Knet::BookCatalog.get_or_init_data(name),
         tags_data: Knet::BookTag.get_or_init_data(name)
       }
+
+      if params[:tag_id]
+        @data[:task] = Knet::BookTaggingTask.from_tag_id(params[:tag_id]).simple_data
+      end
+
       render layout: 'operation_flow_editor/net_editor'
       # render json: @data
     end

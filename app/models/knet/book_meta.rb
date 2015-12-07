@@ -7,5 +7,11 @@ module Knet
     has_many :tags, class_name: 'Knet::BookTag'
 
     field :name # 教材名称
+
+    def simple_data
+      {
+        name: name
+      }
+    end
   end
 end

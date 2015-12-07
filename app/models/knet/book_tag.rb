@@ -9,6 +9,8 @@ module Knet
     field :desc
     field :linked_tag_names
 
+    field :disabled, type: Boolean # 使之不生效
+
     default_scope ->{ order(:id.asc) }
 
     def simple_data
@@ -16,7 +18,8 @@ module Knet
         id: id.to_s,
         name: name,
         desc: desc,
-        linked_tag_names: linked_tag_names
+        linked_tag_names: linked_tag_names,
+        disabled: disabled
       }
     end
 
@@ -64,6 +67,11 @@ module Knet
           )
         }
       end
+
+      def can_dispatch_ids_of(book)
+        Knet::BookTag.where(book: book, :disabled.ne => true).map {|x| x.id.to_s}
+      end
+
     end
   end
 end

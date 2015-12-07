@@ -28,4 +28,6 @@ OperationFlowEditor::Engine.routes.draw do
 
   post 'net/:name/start_tagging', to: 'net#start_tagging', as: 'net_start_tagging'
   put 'net/:name/save_tagging_task', to: 'net#save_tagging_task', as: 'net_save_tagging_task'
+
+  put 'net/tag/:id/update', to: 'net_tag#update', as: 'net_tag_update'
 end

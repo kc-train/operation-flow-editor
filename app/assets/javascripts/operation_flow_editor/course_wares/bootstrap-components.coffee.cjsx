@@ -15,7 +15,7 @@
 
 @BSModal = React.createClass
   getDefaultProps: ->
-    bs_size: 'sm'
+    bs_size: 'sm' # xs sm md lg
 
   render: ->
     <div className='modal fade' ref='modal'>

@@ -114,6 +114,10 @@
       catalogs_done: catalogs_total - catalogs_not_done
     }
 
+  componentWillMount: ->
+    if @props.data.task
+      @set_task @props.data.task
+
   render: ->
     if @state.status is 'ready'
       <div className='net-tagging-wizard ready'>

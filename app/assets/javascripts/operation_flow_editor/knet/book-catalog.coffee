@@ -25,6 +25,9 @@
   count: ->
     Object.keys(@hash).length
 
+  each: (func)->
+    for id, value of @hash
+      func value
 
 @CatalogTree = class
   constructor: (@array_data)->
