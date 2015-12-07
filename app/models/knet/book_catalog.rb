@@ -34,7 +34,7 @@ module Knet
       end
 
       def build_tree_from_file(book)
-        path = Rails.root.join '..', 'net-data', "#{book.name}.workflowy.xml"
+        path = File.join __dir__, '../../..', 'net-data', "#{book.name}.workflowy.xml"
 
         if File.exist? path
           xml_doc = Nokogiri::XML open(path)
