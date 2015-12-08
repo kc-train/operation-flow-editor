@@ -12,6 +12,11 @@
   render: ->
     disabled_count = (@state.tags_set.filter (x)-> x.disabled).length
 
+    all_tags = (@state.tags_set.filter -> true)
+    not_disabled_tags = all_tags.filter (tag)-> !tag.disabled
+    disabled_tags = all_tags.filter (tag)-> tag.disabled
+    not_arranged_tags = all_tags.filter (tag)=> !tag.disabled and !@state.arranged_tag_ids_with_times[tag.id]
+
     <div className='knet-book-tags'>
       <h3 className='tags-count'>
         <span>{@props.data.book_data.name}：</span>
@@ -23,15 +28,16 @@
 
       <div>
         <ul className='nav nav-tabs'>
-          <li className='active'><a data-toggle='tab' href='.all-tags'>全部</a></li>
-          <li><a data-toggle='tab' href='.not-disabled-tags'>未关闭</a></li>
-          <li><a data-toggle='tab' href='.disabled-tags'>已关闭</a></li>
+          <li className='active'><a data-toggle='tab' href='.all-tags'>全部 {all_tags.length}</a></li>
+          <li><a data-toggle='tab' href='.not-disabled-tags'>未关闭 {not_disabled_tags.length}</a></li>
+          <li><a data-toggle='tab' href='.disabled-tags'>已关闭 {disabled_tags.length}</a></li>
+          <li><a data-toggle='tab' href='.not-arranged-tags'>未整理 {not_arranged_tags.length}</a></li>
         </ul>
 
         <div className='tab-content'>
           <div className='tab-pane active all-tags'>
           {
-            @state.tags_set.each (tag)=>
+            for tag in all_tags
               if tag.name.indexOf(@state.query_keyword) > -1
                 arranged = @state.arranged_tag_ids_with_times[tag.id]
                 <KnetBookTags.Tag parent={@} key={tag.id} data={tag} arranged={arranged} />
@@ -39,7 +45,7 @@
           </div>
           <div className='tab-pane not-disabled-tags'>
           {
-            for tag in (@state.tags_set.filter (tag)-> !tag.disabled) 
+            for tag in not_disabled_tags
               if tag.name.indexOf(@state.query_keyword) > -1
                 arranged = @state.arranged_tag_ids_with_times[tag.id]
                 <KnetBookTags.Tag parent={@} key={tag.id} data={tag} arranged={arranged} />
@@ -47,7 +53,15 @@
           </div>
           <div className='tab-pane disabled-tags'>
           {
-            for tag in (@state.tags_set.filter (tag)-> tag.disabled) 
+            for tag in disabled_tags
+              if tag.name.indexOf(@state.query_keyword) > -1
+                arranged = @state.arranged_tag_ids_with_times[tag.id]
+                <KnetBookTags.Tag parent={@} key={tag.id} data={tag} arranged={arranged} />
+          }
+          </div>
+          <div className='tab-pane not-arranged-tags'>
+          {
+            for tag in not_arranged_tags
               if tag.name.indexOf(@state.query_keyword) > -1
                 arranged = @state.arranged_tag_ids_with_times[tag.id]
                 <KnetBookTags.Tag parent={@} key={tag.id} data={tag} arranged={arranged} />
