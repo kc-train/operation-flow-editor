@@ -107,6 +107,7 @@ $help_w: 320px;
           float: left;
           max-width:500px;
           label {
+            cursor: pointer;
             position: relative;
             top:-1px;
             margin-left: 10px;
@@ -118,6 +119,7 @@ $help_w: 320px;
             border-radius:3px;
             padding:0 6px;
             font-weight: normal;
+            &:hover {background-color: #888;}
           }
         }
         a.arrange {
@@ -151,6 +153,14 @@ $help_w: 320px;
       }
     }
 
+  }
+
+  .modal span.tag {
+    span{margin-right: 10px;}
+    i.fa-tag {color: #999;font-size: 12px;margin-right: 4px;}
+    margin-right: 10px;
+    display: block;
+    line-height: 22px;
   }
 }
 

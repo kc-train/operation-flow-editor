@@ -56,11 +56,46 @@
       render: ->
         <div className='modal-footer'>{@props.children}</div>
 
+    InfoModal: React.createClass
+      getInitialState: ->
+        show: false
+        loading: false
+      render: ->
+        <BSModal show={@state.show} bs_size={@props.bs_size}>
+          <BSModal.Header>
+            <BSModal.Title>{@props.title}</BSModal.Title>
+          </BSModal.Header>
+          <BSModal.Body>
+          {
+            if @state.loading
+              <div className='loading'>
+                <i className='fa fa-spinner fa-pulse' />
+                <span>正在载入</span>
+              </div>
+            else
+              @props.children
+          }
+          </BSModal.Body>
+          <BSModal.Footer>
+            <BSButton onClick={@hide}>
+              <span>关闭</span>
+            </BSButton>
+          </BSModal.Footer>
+        </BSModal>
+      show: ->
+        @setState show: true
+      hide: ->
+        @setState show: false
+      loading: ->
+        @setState loading: true
+      loaded: ->
+        @setState loading: false
+
+
     FormModal: React.createClass
       getInitialState: ->
         show: false
         saving: false
-
       render: ->
         <BSModal show={@state.show} bs_size={@props.bs_size}>
           <BSModal.Header>
@@ -89,6 +124,5 @@
         </BSModal>
       show: ->
         @setState show: true
-
       hide: ->
         @setState show: false

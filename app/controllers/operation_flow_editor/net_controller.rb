@@ -13,6 +13,7 @@ module OperationFlowEditor
       tag_with_catalog_ids = Knet::BookTaggingTask.tag_with_catalog_ids_of(book)
 
       @data = {
+        book_data: book.simple_data,
         catalogs_data: catalogs_data,
         tag_with_catalog_ids: tag_with_catalog_ids
       }

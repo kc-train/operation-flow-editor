@@ -85,9 +85,16 @@ class CatalogItem
       if tree.blank()
         <div className='blank'>没有获取到数据</div>
       else
-        <KnetBookCatalog.List host={@} data={tree.roots()} />
+        <div>
+          <KnetBookCatalog.List host={@} data={tree.roots()} />
+          <KnetBookCatalog.TagsModal host={@} ref='tags_modal' />
+        </div>
     }
     </div>
+
+  show_tags: (item_data, tag_ids)->
+    @refs.tags_modal.show(item_data, tag_ids)
+
 
   statics:
     List: React.createClass
@@ -136,7 +143,7 @@ class CatalogItem
               <span>{data.name}</span>
               {
                 if tag_ids.length
-                  <label>{tag_ids.length} 个概念</label>
+                  <KnetBookCatalog.TagLabel host={@props.host} item_data={data} tag_ids={tag_ids} />
               }
             </div>
           </div>
@@ -156,3 +163,39 @@ class CatalogItem
       get_expand_local_storage: ->
         key = "net-catalog-tree-expand-#{@props.data.id}"
         localStorage[key]
+
+    TagLabel: React.createClass
+      render: ->
+        tag_ids = @props.tag_ids
+        <label onClick={@show_tags}>{tag_ids.length} 个概念</label>
+
+      show_tags: ->
+        @props.host.show_tags @props.item_data, @props.tag_ids
+
+    TagsModal: React.createClass
+      getInitialState: ->
+        title: ''
+        tags: []
+      render: ->
+        <BSModal.InfoModal ref='modal' bs_size='md' title={@state.title}>
+        {
+          for tag in @state.tags
+            <span className='tag' key={tag.id}>
+              <i className='fa fa-tag' />
+              <span>{tag.name}</span>
+              <a href="/net/#{@props.host.props.data.book_data.name}/tagging?tag_id=#{tag.id}"><i className='fa fa-play-circle-o' /> 整理</a>
+            </span>
+        }
+        </BSModal.InfoModal>
+      show: (item_data, tag_ids)->
+        @refs.modal.show()
+        @refs.modal.loading()
+        @setState
+          title: item_data.name
+        jQuery.ajax
+          url: '/net/tag/get_tags'
+          data:
+            ids: tag_ids
+        .done (res)=>
+          @refs.modal.loaded()
+          @setState tags: res

@@ -11,5 +11,11 @@ module OperationFlowEditor
       
       render json: tag.simple_data
     end
+
+    def get_tags
+      ids = params[:ids]
+      tags = Knet::BookTag.where(:id.in => ids).map(&:simple_data)
+      render json: tags
+    end
   end
 end
