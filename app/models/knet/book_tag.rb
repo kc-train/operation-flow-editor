@@ -7,7 +7,7 @@ module Knet
 
     field :name # 概念名
     field :desc
-    field :linked_tag_names
+    field :linked_tag_names, default: []
 
     field :disabled, type: Boolean # 使之不生效
 
@@ -18,7 +18,7 @@ module Knet
         id: id.to_s,
         name: name,
         desc: desc,
-        linked_tag_names: linked_tag_names,
+        linked_tag_names: linked_tag_names || [],
         disabled: disabled
       }
     end

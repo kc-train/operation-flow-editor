@@ -117,7 +117,7 @@
             }
           </div>
           <pre className='desc'>{tag.desc.join("\n")}</pre>
-          <KnetBookTags.Links data={tag.linked_tag_names} />
+          <KnetBookTags.Links data={tag.linked_tag_names || []} />
         </div>
 
       do_edit: ->
