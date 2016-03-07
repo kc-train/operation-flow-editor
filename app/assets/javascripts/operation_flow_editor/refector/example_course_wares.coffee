@@ -11,6 +11,9 @@
 CourseWareItem = React.createClass
   render: ->
     data = @props.data
+    show_name = data.name.split("（")[0]
+
+
     <div className='course-ware' data-url="/cw/#{data.number}">
       <div className='cbox' onClick={@open_course_ware}>
         <div className='icon'>

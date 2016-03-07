@@ -13,12 +13,21 @@
     {number: 173130, name: '自助转帐签约/解约'},
     {number: 280020, name: '增资扩股'},
     {number: 280040, name: '股权变更'},
+    {number: 000000, name: '股金分红预算（王欢）——无屏幕，有此交易'}
   ]
 
-  data.each do |d|
-    if OperationFlowEditor::Flow.where(number: d[:number].to_s).first
-      d[:is_published] = true
-    end
+  # data.each do |d|
+  #   if OperationFlowEditor::Flow.where(number: d[:number].to_s).first
+  #     d[:is_published] = true
+  #   end
+  # end
+
+  data = OperationFlowEditor::Flow.all.map do |of|
+    {
+      number: of.number,
+      name: of.name,
+      is_published: true
+    }
   end
 
 = react_component 'ExampleCourseWares', data: data

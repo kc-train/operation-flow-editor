@@ -1,7 +1,7 @@
 development:
   sessions:
     default:
-      database: operation-flow-editor_dev
+      database: operation-flow-editor_dev1
       hosts:
         - localhost:27017
 test:
